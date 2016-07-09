@@ -8,19 +8,19 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
-public class MoviesActivity extends BaseActivity {
-
+public class TvShowsActivity extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_movies);
-        setNavDrawerSelected(R.id.nav_movies);
+        setContentView(R.layout.activity_tvshows);
+        setNavDrawerSelected(R.id.nav_tvshows);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Snackbar.make(view, "Add movies thingy", Snackbar.LENGTH_LONG)
+                Snackbar.make(view, "Add tv thingy", Snackbar.LENGTH_LONG)
                         .setAction("Action", null).show();
             }
         });

@@ -11,6 +11,10 @@
             android:icon="@drawable/ic_menu_tvshows"
             android:title="TV Shows" />
         <item
+            android:id="@+id/nav_backup"
+            android:icon="@drawable/ic_menu_backup"
+            android:title="Backup" />
+        <item
             android:id="@+id/nav_sync"
             android:icon="@drawable/ic_menu_sync"
             android:title="Sync" />

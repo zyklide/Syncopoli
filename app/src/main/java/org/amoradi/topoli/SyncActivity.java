@@ -9,11 +9,12 @@ import android.view.View;
 import android.widget.Toast;
 
 public class SyncActivity extends BaseActivity {
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sync);
+        setNavDrawerSelected(R.id.nav_sync);
+
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -38,12 +39,6 @@ public class SyncActivity extends BaseActivity {
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            Toast.makeText(getApplicationContext(), "Settings activity should open", Toast.LENGTH_SHORT);
-            return true;
-        }
 
         return super.onOptionsItemSelected(item);
     }

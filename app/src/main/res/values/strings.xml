@@ -6,11 +6,46 @@
 
     <string name="action_settings">Settings</string>
 
-    <string name="sync_title">Topoli - Sync</string>
-    <string name="movies_title">Topoli - Movies</string>
-    <string name="tvshows_title">Topoli - TV Shows</string>
+    <string name="movies_title">Movies</string>
+    <string name="tvshows_title">TV Shows</string>
+    <string name="backup_title">Backup</string>
+    <string name="sync_title">Sync</string>
     <string name="settings_title">Settings</string>
+    <string name="title_activity_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <!-- Action bar icons -->
+    <string name="action_refresh">Refresh</string>
+    <string name="action_done">Done</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_server_address">Server address</string>
+    <string name="pref_title_rsync_options">Rsync Options</string>
+    <string name="pref_title_private_key">Private Key</string>
+    <string name="pref_title_rsync_username">Rsync User</string>
+    <string name="pref_title_protocol">Protocol</string>
+    <string name="pref_default_protocol">Rsync</string>
+    <string name="pref_title_port">Port</string>
+    
+    <string-array name="pref_entries_protocol">
+        <item>SSH</item>
+        <item>Rsync</item>
+    </string-array>
+
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_sync_backup">Sync &amp; Backup</string>
+
+    <string-array name="pref_example_list_titles">
+        <item>Always</item>
+        <item>When possible</item>
+        <item>Never</item>
+    </string-array>
+    <string-array name="pref_example_list_values">
+        <item>1</item>
+        <item>0</item>
+        <item>-1</item>
+    </string-array>
+
 </resources>
