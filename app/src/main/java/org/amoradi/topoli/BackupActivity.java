@@ -23,10 +23,17 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-
 class BackupItem {
+    public String name;
     public String source;
     public String destination;
+
+    public BackupItem() {}
+    public BackupItem(String n, String src, String dest) {
+        name = n;
+        source = src;
+        destination = dest;
+    }
 }
 
 interface IBackupHandler {
@@ -35,9 +42,6 @@ interface IBackupHandler {
 
 public class BackupActivity extends BaseActivity implements IBackupHandler {
     private static final String TAG = "BackupActivity";
-
-    private RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
 
     List<BackupItem> mBackupItems;
 
@@ -60,8 +64,9 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
         }
 
         mBackupItems = new ArrayList<>();
-
-
+        mBackupItems.add(new BackupItem("pruathed", "nsteuhda", "asntoeud-"));
+        mBackupItems.add(new BackupItem("anthoed-u", "naotheud-", "satehu"));
+        mBackupItems.add(new BackupItem("netahud", "acttaoheun", "dneathud"));
 
         BackupListFragment f = new BackupListFragment();
         f.setBackupItems(mBackupItems);
@@ -209,6 +214,9 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
                 t = (EditText) getView().findViewById(R.id.addbackupitem_destination);
                 i.destination = t.getText().toString();
 
+                t = (EditText) getView().findViewById(R.id.addbackupitem_name);
+                i.name = t.getText().toString();
+
                 mHandler.addBackup(i);
             }
 
@@ -221,10 +229,13 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
         List<BackupItem> mBackups;
 
         public static class ViewHolder extends RecyclerView.ViewHolder {
-            public TextView mTextView;
+            public TextView mProfileTextView;
+            public TextView mSrcTextView;
+
             public ViewHolder(View v) {
                 super(v);
-                mTextView = (TextView) v.findViewById(R.id.backup_text);
+                mProfileTextView = (TextView) v.findViewById(R.id.backup_item_profile_text);
+                mSrcTextView = (TextView) v.findViewById(R.id.backup_item_source);
             }
         }
 
@@ -241,7 +252,8 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int pos) {
-            holder.mTextView.setText(mBackups.get(pos).source);
+            holder.mProfileTextView.setText(mBackups.get(pos).name);
+            holder.mSrcTextView.setText(mBackups.get(pos).source);
         }
 
         @Override
@@ -272,6 +284,7 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
             BackupAdapter mAdapter = new BackupAdapter(mBackupItems);
             mRecyclerView.setAdapter(mAdapter);
+            mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
             return v;
         }
 

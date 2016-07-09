@@ -10,31 +10,43 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal">
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Profile:"
+        android:layout_gravity="right|center_vertical" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Origin"
-            android:layout_gravity="right|center_vertical" />
+    <EditText
+        android:id="@+id/addbackupitem_name"
+        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill_horizontal|center_vertical" />
 
-        <EditText
-            android:id="@+id/addbackupitem_source"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill_horizontal|center_vertical" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Origin"
+        android:layout_gravity="right|center_vertical" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Destination"
-            android:layout_gravity="right|center_vertical" />
+    <EditText
+        android:id="@+id/addbackupitem_source"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill_horizontal|center_vertical" />
 
-        <EditText
-            android:id="@+id/addbackupitem_destination"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_columnWeight="1"
-            android:layout_gravity="fill_horizontal|center_vertical" />
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Destination"
+        android:layout_gravity="right|center_vertical" />
+
+    <EditText
+        android:id="@+id/addbackupitem_destination"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_columnWeight="1"
+        android:layout_gravity="fill_horizontal|center_vertical" />
 
 </GridLayout>
