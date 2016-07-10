@@ -21,7 +21,7 @@
 
         <ListPreference
             android:title="@string/pref_title_protocol"
-            android:key="pref_key_procotol"
+            android:key="pref_key_protocol"
             android:dialogTitle="@string/pref_title_protocol"
             android:entries="@array/pref_entries_protocol"
             android:entryValues="@array/pref_entries_protocol"
