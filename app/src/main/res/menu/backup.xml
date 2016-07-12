@@ -16,4 +16,11 @@
         app:showAsAction="ifRoom"
         />
 
+    <item
+        android:id="@+id/action_run"
+        android:icon="@drawable/ic_action_run"
+        android:title="Run all backups"
+        app:showAsAction="ifRoom"
+        />
+
 </menu>

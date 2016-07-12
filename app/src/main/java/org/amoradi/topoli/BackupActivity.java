@@ -1,12 +1,12 @@
 package org.amoradi.topoli;
 
+import android.accounts.Account;
+import android.accounts.AccountManager;
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.ContentValues;
+import android.content.ContentResolver;
+import android.content.Context;
 import android.content.SharedPreferences;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.design.widget.FloatingActionButton;
@@ -20,49 +20,42 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.BufferedReader;
-import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
-class BackupItem {
-    public String name;
-    public String source;
-    public String destination;
-
-    public BackupItem() {}
-    public BackupItem(String n, String src, String dest) {
-        name = n;
-        source = src;
-        destination = dest;
-    }
-}
-
-interface IBackupHandler {
-    void addBackup(BackupItem bi);
-    void runBackup(BackupItem bi);
-}
-
 interface IBackupItemClickHandler {
-    void onBackupItemClick(int pos);
+    void onBackupShowLog(int pos);
 }
 
 public class BackupActivity extends BaseActivity implements IBackupHandler {
     private static final String TAG = "BackupActivity";
-
-    List<BackupItem> mBackupItems;
+    private static final String SYNC_AUTHORITY = "org.amoradi.topoli.provider";
+    private static final String SYNC_ACCOUNT_NAME = "Topoli Sync Account";
+    private static final String SYNC_ACCOUNT_TYPE = "org.amoradi.topoli.sync";
+    Account mAccount;
+    BackupHandler mBackupHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_backup);
         setNavDrawerSelected(R.id.nav_backup);
+
+        mAccount = createSyncAccount(this);
+
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
+        long freq = Long.parseLong(prefs.getString(SettingsActivity.KEY_FREQUENCY, "8"));
+        freq = freq * 3600; // hours to seconds
+
+        ContentResolver.addPeriodicSync(mAccount, SYNC_AUTHORITY, new Bundle(), freq);
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         if (fab != null) {
@@ -71,17 +64,28 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
                 public void onClick(View view) {
                     Log.e(TAG, "replacing fragment");
                     AddBackupItemFragment f = new AddBackupItemFragment();
-                    getFragmentManager().beginTransaction().replace(R.id.content_container, f).commit();
+                    getFragmentManager().beginTransaction().replace(R.id.content_container, f).addToBackStack(null).commit();
                 }
             });
         }
 
-        mBackupItems = getBackups();
+        mBackupHandler = new BackupHandler(this);
 
         BackupListFragment f = new BackupListFragment();
-        f.setBackupItems(mBackupItems);
         f.setBackupHandler(this);
         getFragmentManager().beginTransaction().replace(R.id.content_container, f).commit();
+    }
+
+    public static Account createSyncAccount(Context ctx) {
+        Account acc = new Account(SYNC_ACCOUNT_NAME, SYNC_ACCOUNT_TYPE);
+        AccountManager accman = AccountManager.get(ctx);
+
+        if (accman.addAccountExplicitly(acc, null, null)) {
+            ContentResolver.setIsSyncable(acc, SYNC_AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(acc, SYNC_AUTHORITY, true);
+        }
+
+        return acc;
     }
 
     @Override
@@ -90,8 +94,17 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
         getMenuInflater().inflate(R.menu.backup, menu);
         menu.findItem(R.id.action_done).setVisible(false);
         menu.findItem(R.id.action_refresh).setVisible(true);
+        menu.findItem(R.id.action_run).setVisible(true);
 
         return true;
+    }
+
+    public void syncBackups() {
+        Toast.makeText(this, "Syncing", Toast.LENGTH_SHORT).show();
+        Bundle settingsBundle = new Bundle();
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
+        settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
+        ContentResolver.requestSync(mAccount, SYNC_AUTHORITY, settingsBundle);
     }
 
     @Override
@@ -101,169 +114,44 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        if (id == R.id.action_refresh) {
-            Toast.makeText(getApplicationContext(), "Running all backups", Toast.LENGTH_SHORT).show();
+        if (id == R.id.action_run) {
+            Toast.makeText(getApplicationContext(), "Running all tasks", Toast.LENGTH_SHORT).show();
+            syncBackups();
+        } else {
+            return super.onOptionsItemSelected(item);
         }
 
-        return super.onOptionsItemSelected(item);
+        return true;
     }
 
     public void addBackup(BackupItem item) {
-        if (item.source.equals("") || item.name.equals("") || item.destination.equals("")) {
-            return;
-        }
-
-        Toast.makeText(getApplicationContext(), "Adding new backup '" + item.source + "'", Toast.LENGTH_SHORT).show();
-
-        BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(getApplicationContext());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(BackupSyncSchema.COLUMN_TYPE, "backup");
-        values.put(BackupSyncSchema.COLUMN_NAME, item.name);
-        values.put(BackupSyncSchema.COLUMN_SOURCE, item.source);
-        values.put(BackupSyncSchema.COLUMN_DESTINATION, item.destination);
-
-        db.insert(BackupSyncSchema.TABLE_NAME, null, values);
-
-        mBackupItems.clear();
-        mBackupItems = getBackups();
-
+        mBackupHandler.addBackup(item);
         BackupListFragment f = new BackupListFragment();
-        f.setBackupItems(mBackupItems);
         f.setBackupHandler(this);
-        getFragmentManager().beginTransaction().replace(R.id.content_container, f).commit();
+        getFragmentManager().beginTransaction().replace(R.id.content_container, f).addToBackStack(null).commit();
+    }
+
+    public void updateBackupList() {
+        mBackupHandler.updateBackupList();
     }
 
     public List<BackupItem> getBackups() {
-        List<BackupItem> bl = new ArrayList<>();
-
-        BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(getApplicationContext());
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-
-        String[] proj = {BackupSyncSchema.COLUMN_NAME,
-                         BackupSyncSchema.COLUMN_SOURCE,
-                         BackupSyncSchema.COLUMN_DESTINATION};
-
-        Cursor c = db.query(
-                BackupSyncSchema.TABLE_NAME,
-                proj,
-                "type = 'backup'",
-                null,
-                null,
-                null,
-                BackupSyncSchema.COLUMN_NAME + " DESC",
-                null
-        );
-
-        if (c.getCount() <= 0) {
-            c.close();
-            return bl;
-        }
-
-        c.moveToFirst();
-
-        do {
-            BackupItem x = new BackupItem();
-            x.name = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_NAME));
-            x.source = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_SOURCE));
-            x.destination = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_DESTINATION));
-            bl.add(x);
-        } while(c.moveToNext());
-
-        c.close();
-        return bl;
+        return mBackupHandler.getBackups();
     }
 
-    public void runBackup(BackupItem b) {
-        new RunBackupProcess().execute(b);
+    public void updateBackupTimestamp(BackupItem b) {
+        mBackupHandler.updateBackupTimestamp(b);
     }
 
-    private class RunBackupProcess extends AsyncTask<BackupItem, Void, Integer> {
-        @Override
-        protected Integer doInBackground(BackupItem... bs) {
-            BackupItem b = bs[0];
+    public int runBackup(BackupItem b) {
+        syncBackups();
+        return 0;
+    }
 
-            try {
-                // Executes the command.
-                File f = new File(rsyncPath);
-
-                SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
-                String rsync_username = prefs.getString(SettingsActivity.KEY_RSYNC_USERNAME, "");
-                String rsync_options = prefs.getString(SettingsActivity.KEY_RSYNC_OPTIONS, "");
-                String server_address = prefs.getString(SettingsActivity.KEY_SERVER_ADDRESS, "");
-                String protocol = prefs.getString(SettingsActivity.KEY_PROTOCOL, "SSH");
-                String private_key = prefs.getString(SettingsActivity.KEY_PRIVATE_KEY, "");
-                String port = prefs.getString(SettingsActivity.KEY_PORT, "22");
-
-                List<String> args = new ArrayList<>();
-
-                args.add(f.getAbsolutePath());
-                Collections.addAll(args, rsync_options.split(" "));
-
-                if (protocol.equals("SSH")) {
-                    args.add("-e");
-                    args.add(sshPath + " -y -p " + port + " -i " + private_key);
-                }
-
-                args.add(b.source);
-                args.add(rsync_username + "@" + server_address + ":" + b.destination);
-
-                // DEBUG
-                StringBuilder sb = new StringBuilder();
-                for (String x : args) {
-                    sb.append(x);
-                    sb.append(" ");
-                }
-
-                Log.e(TAG, sb.toString());
-
-                ProcessBuilder pb = new ProcessBuilder(args);
-                pb.directory(getFilesDir());
-                pb.redirectErrorStream(true);
-                Process process = pb.start();
-
-
-                // Reads stdout.
-                // NOTE: You can write to stdin of the command using
-                //       process.getOutputStream().
-
-                BufferedReader reader = new BufferedReader(
-                        new InputStreamReader(process.getInputStream()));
-                int read;
-                char[] buffer = new char[4096];
-
-                while ((read = reader.read(buffer)) > 0) {
-                    StringBuffer output = new StringBuffer();
-                    output.append(buffer, 0, read);
-                    Log.e(TAG, output.toString());
-                }
-                reader.close();
-
-
-                // Waits for the command to finish.
-                process.waitFor();
-                return process.exitValue();
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
-
-        @Override
-        protected void onPreExecute() {
-            Toast.makeText(getApplicationContext(), "Running backup", Toast.LENGTH_SHORT).show();
-        }
-
-        @Override
-        protected void onPostExecute(Integer res) {
-            if (res != 0) {
-                Toast.makeText(getApplicationContext(), "Error: Rsync returned " + res, Toast.LENGTH_SHORT).show();
-            } else {
-                Toast.makeText(getApplicationContext(), "Backup completed", Toast.LENGTH_SHORT).show();
-            }
-        }
+    public void showLog(BackupItem b) {
+        BackupLogFragment f = new BackupLogFragment();
+        f.setBackupItem(b);
+        getFragmentManager().beginTransaction().replace(R.id.content_container, f).addToBackStack(null).commit();
     }
 
     public static class AddBackupItemFragment extends Fragment {
@@ -292,6 +180,7 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
             super.onCreateOptionsMenu(menu, inflater);
             menu.findItem(R.id.action_done).setVisible(true);
             menu.findItem(R.id.action_refresh).setVisible(false);
+            menu.findItem(R.id.action_run).setVisible(false);
         }
 
         @Override
@@ -311,15 +200,86 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
                 i.name = t.getText().toString();
 
                 mHandler.addBackup(i);
+            } else {
+                return super.onOptionsItemSelected(item);
             }
 
-            return super.onOptionsItemSelected(item);
+            return true;
         }
     }
 
+    public static class BackupLogFragment extends Fragment {
+        private BackupItem mBackupItem;
+
+        @Override
+        public void onCreate(Bundle savedInstanceState) {
+            super.onCreate(savedInstanceState);
+            setHasOptionsMenu(true);
+        }
+
+        public void setBackupItem(BackupItem b) {
+            mBackupItem = b;
+        }
+
+        @Override
+        public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                                 Bundle savedInstanceState) {
+            View v = inflater.inflate(R.layout.fragment_backuplog, container, false);
+            if (mBackupItem != null) {
+                ((TextView) v.findViewById(R.id.backuplog_textview)).setText(getLogString(mBackupItem.logFileName));
+            } else {
+                ((TextView) v.findViewById(R.id.backuplog_textview)).setText("mBackupItem is null");
+            }
+
+            return v;
+        }
+
+        @Override
+        public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+            super.onCreateOptionsMenu(menu, inflater);
+            menu.findItem(R.id.action_done).setVisible(false);
+            menu.findItem(R.id.action_refresh).setVisible(true);
+            menu.findItem(R.id.action_run).setVisible(false);
+        }
+
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            int id = item.getItemId();
+
+            if (id == R.id.action_refresh) {
+                ((TextView) getView().findViewById(R.id.backuplog_textview)).setText(getLogString(mBackupItem.logFileName));
+            } else {
+                return super.onOptionsItemSelected(item);
+            }
+
+            return true;
+        }
+
+        public String getLogString(String filename) {
+            try {
+                FileInputStream ins = getActivity().getApplicationContext().openFileInput(filename);
+
+                BufferedReader reader = new BufferedReader(new InputStreamReader(ins));
+                char[] buffer = new char[4096];
+
+                StringBuilder output = new StringBuilder();
+                while (reader.read(buffer) > 0) {
+                    output.append(new String(buffer));
+                }
+                reader.close();
+                ins.close();
+
+                return output.toString();
+            } catch (FileNotFoundException e) {
+                return "Log file not found.";
+            } catch (IOException e) {
+                e.printStackTrace();
+                return "An error occurred while trying to read log file.";
+            }
+        }
+    }
 
     public static class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> implements IBackupItemClickHandler {
-        List<BackupItem> mBackups;
         IBackupHandler mBackupHandler;
 
         public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
@@ -330,7 +290,9 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
 
             public ViewHolder(View v, IBackupItemClickHandler handler) {
                 super(v);
-                v.setOnClickListener(this);
+                LinearLayout l = (LinearLayout) v.findViewById(R.id.backup_item_info);
+                l.setOnClickListener(this);
+
                 mBackupClickHandler = handler;
                 mProfileTextView = (TextView) v.findViewById(R.id.backup_item_profile_text);
                 mSrcTextView = (TextView) v.findViewById(R.id.backup_item_source);
@@ -338,12 +300,13 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
 
             @Override
             public void onClick(View v) {
-                mBackupClickHandler.onBackupItemClick(getAdapterPosition());
+                if (v instanceof LinearLayout) {
+                    mBackupClickHandler.onBackupShowLog(getAdapterPosition());
+                }
             }
         }
 
-        public BackupAdapter(List<BackupItem> backups, IBackupHandler handler) {
-            mBackups = backups;
+        public BackupAdapter(IBackupHandler handler) {
             mBackupHandler = handler;
         }
 
@@ -356,27 +319,31 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
 
         @Override
         public void onBindViewHolder(ViewHolder holder, int pos) {
-            holder.mProfileTextView.setText(mBackups.get(pos).name);
-            holder.mSrcTextView.setText(mBackups.get(pos).source);
+            holder.mProfileTextView.setText(mBackupHandler.getBackups().get(pos).name);
+
+            if (mBackupHandler.getBackups().get(pos).lastUpdate == null) {
+                holder.mSrcTextView.setText("This backup has never run");
+            } else {
+                holder.mSrcTextView.setText("Last update: " + mBackupHandler.getBackups().get(pos).lastUpdate.toString());
+            }
         }
 
         @Override
         public int getItemCount() {
-            return mBackups.size();
+            return mBackupHandler.getBackups().size();
         }
 
-        public void onBackupItemClick(int pos) {
-            mBackupHandler.runBackup(mBackups.get(pos));
+        public void onBackupRun(int pos) {
+        }
+        public void onBackupShowLog(int pos) {
+            mBackupHandler.showLog(mBackupHandler.getBackups().get(pos));
         }
     }
 
     public static class BackupListFragment extends Fragment {
         private List<BackupItem> mBackupItems;
         private IBackupHandler mBackupHandler;
-
-        public void setBackupItems(List<BackupItem> b) {
-            mBackupItems = b;
-        }
+        private BackupAdapter mAdapter;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
@@ -391,7 +358,7 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
             RecyclerView mRecyclerView = (RecyclerView) v.findViewById(R.id.recyclerview_backup);
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
-            BackupAdapter mAdapter = new BackupAdapter(mBackupItems, mBackupHandler);
+            mAdapter = new BackupAdapter(mBackupHandler);
             mRecyclerView.setAdapter(mAdapter);
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
             return v;
@@ -402,12 +369,21 @@ public class BackupActivity extends BaseActivity implements IBackupHandler {
             super.onCreateOptionsMenu(menu, inflater);
             menu.findItem(R.id.action_done).setVisible(false);
             menu.findItem(R.id.action_refresh).setVisible(true);
+            menu.findItem(R.id.action_run).setVisible(true);
         }
 
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {
             int id = item.getItemId();
-            return super.onOptionsItemSelected(item);
+            if (id == R.id.action_refresh) {
+                mBackupHandler.updateBackupList();
+                mBackupItems = mBackupHandler.getBackups();
+                mAdapter.notifyDataSetChanged();
+            } else {
+                super.onOptionsItemSelected(item);
+            }
+
+            return true;
         }
 
         public void setBackupHandler(IBackupHandler handler) {

@@ -11,14 +11,22 @@ public class BackupSyncOpenHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table if not exists " + BackupSyncSchema.TABLE_NAME + " (" +
-                   BackupSyncSchema.COLUMN_TYPE + " text, " +
-                   BackupSyncSchema.COLUMN_NAME + " text, " +
-                   BackupSyncSchema.COLUMN_SOURCE + " text, " +
-                   BackupSyncSchema.COLUMN_DESTINATION + " text);");
+        db.execSQL("create table " + BackupSyncSchema.TABLE_NAME + " (" +
+                   BackupSyncSchema.COLUMN_TYPE         + " text, " +
+                   BackupSyncSchema.COLUMN_NAME         + " text, " +
+                   BackupSyncSchema.COLUMN_SOURCE       + " text, " +
+                   BackupSyncSchema.COLUMN_DESTINATION  + " text, " +
+                   BackupSyncSchema.COLUMN_LAST_UPDATE  + " text);");
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        db.execSQL("drop table " + BackupSyncSchema.TABLE_NAME + ";");
+        onCreate(db);
+    }
+
+    @Override
+    public void onDowngrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        onUpgrade(db, oldVersion, newVersion);
     }
 }
