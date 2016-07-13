@@ -15,4 +15,4 @@ Options
 
 SSH Key
 -------
-Syncopoli requires a dropbear-compatible ssh key. You can use `dropbearconvert` to 
+Syncopoli requires a dropbear-compatible ssh key. You can use `dropbearconvert` to convert your openssh key to dropbear key.
