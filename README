@@ -16,3 +16,7 @@ Options
 SSH Key
 -------
 Syncopoli requires a dropbear-compatible ssh key. You can use `dropbearconvert` to convert your openssh key to dropbear key.
+
+External binaries
+-----------------
+`rsync` and `ssh` (dropbear ssh) binaries are included here and are themselves open source projects. The sources for these binaries have not been modified.
