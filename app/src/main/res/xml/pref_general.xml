@@ -38,21 +38,21 @@
             android:capitalize="none"
             android:defaultValue="sync"
             android:inputType="text"
-            android:key="pref_key_rsync_username"
+            android:key="pref_key_username"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="@string/pref_title_rsync_username" />
+            android:title="@string/pref_title_username" />
 
         <EditTextPreference
             android:capitalize="none"
-            android:defaultValue="-vHrlt --chmod=Du+rwx,go-w,Fu+rw,go-w --no-perms"
+            android:defaultValue="-vHrlt --no-perms"
             android:inputType="text"
-            android:key="pref_key_rsync_options"
+            android:key="pref_key_options"
             android:maxLines="1"
             android:selectAllOnFocus="false"
             android:singleLine="true"
-            android:title="@string/pref_title_rsync_options" />
+            android:title="@string/pref_title_options" />
 
         <EditTextPreference
             android:defaultValue=""
@@ -64,13 +64,22 @@
             android:title="@string/pref_title_private_key" />
 
         <EditTextPreference
+            android:defaultValue=""
+            android:inputType="textPassword"
+            android:key="pref_key_rsync_password"
+            android:maxLines="1"
+            android:selectAllOnFocus="true"
+            android:singleLine="true"
+            android:title="@string/pref_title_rsync_password" />
+
+        <EditTextPreference
             android:defaultValue="8"
             android:inputType="number"
             android:key="pref_key_frequency"
             android:maxLines="1"
             android:selectAllOnFocus="true"
             android:singleLine="true"
-            android:title="Frequency (hours)" />
+            android:title="@string/pref_title_frequency" />
 
     </PreferenceCategory>
 

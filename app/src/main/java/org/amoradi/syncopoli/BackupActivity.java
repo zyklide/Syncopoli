@@ -38,8 +38,6 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.List;
 
-import it.gmariotti.recyclerview.itemanimator.ScaleInOutItemAnimator;
-
 public class BackupActivity extends AppCompatActivity implements IBackupHandler {
     private static final String TAG = "BackupActivity";
 
@@ -179,9 +177,11 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         try {
             File file = getFileStreamPath(filename);
 
+            /*
             if (file.exists()) {
                 return file.getAbsolutePath();
             }
+            */
 
             InputStream ins = getAssets().open("arm/" + filename);
             FileOutputStream outputStream = new FileOutputStream(file.getAbsolutePath());
@@ -381,7 +381,8 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             holder.mView.setTranslationX(holder.mView.getTranslationX() -50f);
             holder.mView.setAlpha(0f);
             holder.mView.animate()
-                    .setDuration(300)
+                    .setDuration(200)
+                    .setStartDelay(holder.getLayoutPosition() * 50)
                     .translationXBy(50f)
                     .alpha(1f)
                     .setInterpolator(new AccelerateDecelerateInterpolator())
@@ -419,9 +420,7 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
             mAdapter = new BackupAdapter(mBackupHandler);
-
             mRecyclerView.setAdapter(mAdapter);
-            mRecyclerView.setItemAnimator(new ScaleInOutItemAnimator(mRecyclerView));
 
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
 

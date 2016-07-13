@@ -15,12 +15,14 @@
     <!-- General settings -->
     <string name="pref_header_general">General</string>
     <string name="pref_title_server_address">Server address</string>
-    <string name="pref_title_rsync_options">Rsync Options</string>
     <string name="pref_title_private_key">Private Key</string>
-    <string name="pref_title_rsync_username">Rsync User</string>
+    <string name="pref_title_username">User</string>
+    <string name="pref_title_options">Additional Options</string>
     <string name="pref_title_protocol">Protocol</string>
     <string name="pref_default_protocol">Rsync</string>
     <string name="pref_title_port">Port</string>
+    <string name="pref_title_frequency">Frequency (hours)</string>
+    <string name="pref_title_rsync_password">Rsync Password</string>
     
     <string-array name="pref_entries_protocol">
         <item>SSH</item>

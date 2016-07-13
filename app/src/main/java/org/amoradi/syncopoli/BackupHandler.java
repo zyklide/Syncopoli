@@ -20,6 +20,7 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 
 public class BackupHandler implements IBackupHandler {
     private List<BackupItem> mBackupItems;
@@ -137,7 +138,6 @@ public class BackupHandler implements IBackupHandler {
 
     public int runBackup(BackupItem b) {
         try {
-            // Executes the command.
             String rsyncPath = new File(mContext.getFilesDir(), "rsync").getAbsolutePath();
             String sshPath = new File(mContext.getFilesDir(), "ssh").getAbsolutePath();
 
@@ -149,54 +149,111 @@ public class BackupHandler implements IBackupHandler {
 
             SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
             String rsync_username = prefs.getString(SettingsFragment.KEY_RSYNC_USERNAME, "");
+
+            if (rsync_username.equals("")) {
+                logFile.write("ERROR: Username not specified. Please set username in settings.".getBytes());
+                return -1;
+            }
+
             String rsync_options = prefs.getString(SettingsFragment.KEY_RSYNC_OPTIONS, "");
+            String rsync_password = prefs.getString(SettingsFragment.KEY_RSYNC_PASSWORD, "");
+
             String server_address = prefs.getString(SettingsFragment.KEY_SERVER_ADDRESS, "");
+
+            if (server_address.equals("")) {
+                logFile.write("ERROR: Server address not specified. Please set Server address in settings.".getBytes());
+                return -1;
+            }
+
             String protocol = prefs.getString(SettingsFragment.KEY_PROTOCOL, "SSH");
             String private_key = prefs.getString(SettingsFragment.KEY_PRIVATE_KEY, "");
             String port = prefs.getString(SettingsFragment.KEY_PORT, "22");
 
+            if (port.equals("")) {
+                logFile.write("ERROR: Port not specified. Please set Port in settings.".getBytes());
+                return -1;
+            }
+
+            /*
+             * BUILD ARGUMENTS
+             */
+
             List<String> args = new ArrayList<>();
 
             args.add(f.getAbsolutePath());
-            args.add("--itemize-changes");
-            Collections.addAll(args, rsync_options.split(" "));
 
-            if (protocol.equals("SSH")) {
-                args.add("-e");
-                args.add(sshPath + " -y -p " + port + " -i " + private_key);
+            if (!rsync_options.equals("")) {
+                Collections.addAll(args, rsync_options.split(" "));
             }
 
-            args.add(b.source);
-            args.add(rsync_username + "@" + server_address + ":" + b.destination);
+            if (protocol.equals("SSH")) {
+                if (private_key.equals("")) {
+                    logFile.write("ERROR: Private key is not specified while SSH protocol is in use.".getBytes());
+                    return -1;
+                }
+
+                args.add("-e");
+                args.add(sshPath + " -y -p " + port + " -i " + private_key);
+                args.add(b.source);
+                args.add(rsync_username + "@" + server_address + ":" + b.destination);
+            } else if (protocol.equals("Rsync")) {
+                args.add(b.source);
+                args.add(rsync_username + "@" + server_address + "::" + b.destination);
+            }
+
+            /*
+             * BUILD PROCESS
+             */
 
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.directory(mContext.getFilesDir());
             //pb.redirectErrorStream(true);
+
+            if (protocol.equals("Rsync") && !rsync_password.equals("")) {
+                Map<String, String> env = pb.environment();
+                env.put("RSYNC_PASSWORD", rsync_password);
+            }
+
+            /*
+             * RUN PROCESS
+             */
+
             Process process = pb.start();
 
-            // Reads stdout.
-            // NOTE: You can write to stdin of the command using
-            //       process.getOutputStream().
+            /*
+             * GET STDOUT/STDERR
+             */
 
-            BufferedReader reader = new BufferedReader(
-                    new InputStreamReader(process.getInputStream()));
             int read;
+            BufferedReader reader;
             char[] buffer = new char[4096];
 
+            /* STDOUT */
+            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((read = reader.read(buffer)) > 0) {
                 StringBuffer output = new StringBuffer();
                 output.append(buffer, 0, read);
                 logFile.write(output.toString().getBytes());
-                //Log.v(TAG, "STDOUT: " + output.toString());
             }
             reader.close();
 
+            /* STDERR */
+            StringBuilder stderr = new StringBuilder();
+            reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
+            while(reader.read(buffer) > 0) {
+                stderr.append(buffer);
+            }
+
             // Waits for the command to finish.
             process.waitFor();
+
+            if (process.exitValue() != 0) {
+                logFile.write("Error text:\n".getBytes());
+                logFile.write(stderr.toString().getBytes());
+            }
+
             return process.exitValue();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } catch (InterruptedException e) {
+        } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
     }
