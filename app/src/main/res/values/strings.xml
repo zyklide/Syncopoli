@@ -1,18 +1,9 @@
 <resources>
-    <string name="app_name">Topoli</string>
-
-    <string name="navigation_drawer_open">Open navigation drawer</string>
-    <string name="navigation_drawer_close">Close navigation drawer</string>
-
+    <string name="app_name">Syncopoli</string>
     <string name="action_settings">Settings</string>
 
-    <string name="movies_title">Movies</string>
-    <string name="tvshows_title">TV Shows</string>
     <string name="backup_title">Backup</string>
-    <string name="sync_title">Sync</string>
     <string name="settings_title">Settings</string>
-    <string name="title_activity_settings">Settings</string>
-
     <string name="action_run_backup">Run backup</string>
 
     <!-- Action bar icons -->
@@ -38,16 +29,4 @@
 
     <string name="pref_category_general">General</string>
     <string name="pref_category_sync_backup">Sync &amp; Backup</string>
-
-    <string-array name="pref_example_list_titles">
-        <item>Always</item>
-        <item>When possible</item>
-        <item>Never</item>
-    </string-array>
-    <string-array name="pref_example_list_values">
-        <item>1</item>
-        <item>0</item>
-        <item>-1</item>
-    </string-array>
-
 </resources>

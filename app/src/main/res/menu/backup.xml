@@ -23,4 +23,10 @@
         app:showAsAction="ifRoom"
         />
 
+    <item
+        android:id="@+id/menu_settings"
+        android:icon="@drawable/ic_menu_settings"
+        android:title="@string/settings_title"
+        app:showAsAction="never" />
+
 </menu>
