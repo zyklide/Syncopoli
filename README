@@ -20,3 +20,9 @@ Syncopoli requires a dropbear-compatible ssh key. You can use `dropbearconvert` 
 External binaries
 -----------------
 `rsync` and `ssh` (dropbear ssh) binaries are included here and are themselves open source projects. The sources for these binaries have not been modified.
+
+FAQ
+---
+
+Q: Why is Syncopoli making connections to <someservername>?
+A: Syncopoli needs `rsync` and `ssh` (dropbearssh) to operate. Since F-Droid does not allow bundling of binary files, I have hosted them on <someservername> and download those two when you first run the program. If you don't trust the binaries and have your phone rooted, just put `rsync` and `ssh` binaries that you have compiled yourself in `/data/data/org.amoradi.topoli` and Syncopoli will use those ones instead.
