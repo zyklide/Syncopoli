@@ -43,6 +43,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.List;
 
+import javax.net.ssl.HttpsURLConnection;
+
 public class BackupActivity extends AppCompatActivity implements IBackupHandler {
     private static final String TAG = "BackupActivity";
 
@@ -202,12 +204,13 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         protected String doInBackground(String... filenames) {
             InputStream input = null;
             OutputStream output = null;
-            HttpURLConnection connection = null;
+            HttpsURLConnection connection = null;
 
             try {
                 URL url = new URL("https://amoradi.org/public/android/arm/" + filenames[0]);
                 filePath = context.getFileStreamPath(filenames[0]).getAbsolutePath();
-                connection = (HttpURLConnection) url.openConnection();
+                connection = (HttpsURLConnection) url.openConnection();
+                connection.setSSLSocketFactory(new TLSSocketFactory());
                 connection.connect();
 
                 // expect HTTP 200 OK, so we don't mistakenly save error report
