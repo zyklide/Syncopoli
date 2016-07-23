@@ -48,9 +48,9 @@ import javax.net.ssl.HttpsURLConnection;
 public class BackupActivity extends AppCompatActivity implements IBackupHandler {
     private static final String TAG = "BackupActivity";
 
-    private static final String SYNC_AUTHORITY = "org.amoradi.syncopoli.provider";
-    private static final String SYNC_ACCOUNT_NAME = "Syncopoli Sync Account";
-    private static final String SYNC_ACCOUNT_TYPE = "org.amoradi.syncopoli";
+    public static final String SYNC_AUTHORITY = "org.amoradi.syncopoli.provider";
+    public static final String SYNC_ACCOUNT_NAME = "Syncopoli Sync Account";
+    public static final String SYNC_ACCOUNT_TYPE = "org.amoradi.syncopoli";
 
     Account mAccount;
     BackupHandler mBackupHandler;

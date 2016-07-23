@@ -81,6 +81,12 @@
             android:singleLine="true"
             android:title="@string/pref_title_frequency" />
 
+        <CheckBoxPreference
+            android:key="pref_key_wifi_only"
+            android:title="@string/pref_title_wifi_only"
+            android:summaryOff="@string/pref_sum_no_wifi_only"
+            android:summaryOn="@string/pref_sum_wifi_only" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

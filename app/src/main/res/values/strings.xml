@@ -24,6 +24,7 @@
     <string name="pref_title_port">Port</string>
     <string name="pref_title_frequency">Frequency (hours)</string>
     <string name="pref_title_rsync_password">Rsync Password</string>
+    <string name="pref_title_wifi_only">Wifi only</string>
     
     <string-array name="pref_entries_protocol">
         <item>SSH</item>
@@ -32,4 +33,7 @@
 
     <string name="pref_category_general">General</string>
     <string name="pref_category_sync_backup">Sync &amp; Backup</string>
+
+    <string name="pref_sum_wifi_only">Sync will require Wifi connection to proceed</string>
+    <string name="pref_sum_no_wifi_only">Sync will proceed on any network connection (including mobile data)</string>
 </resources>

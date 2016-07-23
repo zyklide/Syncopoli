@@ -21,7 +21,11 @@ public class SyncAdapter extends AbstractThreadedSyncAdapter {
         BackupHandler backupHandler = new BackupHandler(getContext());
 
         for (BackupItem b : backupHandler.getBackups()) {
-            backupHandler.runBackup(b);
+            int ret = backupHandler.runBackup(b);
+
+            if (ret == BackupHandler.ERROR_NO_WIFI) {
+                backupHandler.setRunOnWifi(true);
+            }
         }
     }
 }

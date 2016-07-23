@@ -17,9 +17,14 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
     public final static String KEY_PORT = "pref_key_port";
     public final static String KEY_FREQUENCY = "pref_key_frequency";
     public final static String KEY_RSYNC_PASSWORD = "pref_key_rsync_password";
+    public final static String KEY_WIFI_ONLY = "pref_key_wifi_only";
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        if (key.equals(KEY_WIFI_ONLY) || key.equals(KEY_RSYNC_PASSWORD)) {
+            return;
+        }
+
         Preference pref = findPreference(key);
         String summary = sharedPreferences.getString(key, "Not set");
         pref.setSummary(summary);
@@ -46,7 +51,7 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
 
     private void initializeSummaries() {
         String[] keys = {KEY_SERVER_ADDRESS, KEY_PROTOCOL, KEY_RSYNC_USERNAME, KEY_RSYNC_OPTIONS,
-                         KEY_PRIVATE_KEY, KEY_PORT, KEY_FREQUENCY, KEY_RSYNC_PASSWORD};
+                         KEY_PRIVATE_KEY, KEY_PORT, KEY_FREQUENCY};
         SharedPreferences sp = getPreferenceScreen().getSharedPreferences();
 
         for (String key : keys) {

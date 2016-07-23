@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 
 import java.io.BufferedReader;
@@ -25,6 +27,8 @@ import java.util.Map;
 public class BackupHandler implements IBackupHandler {
     private List<BackupItem> mBackupItems;
     Context mContext;
+
+    public static final int ERROR_NO_WIFI = -2;
 
     public BackupHandler(Context ctx) {
         mContext = ctx;
@@ -137,6 +141,10 @@ public class BackupHandler implements IBackupHandler {
     }
 
     public int runBackup(BackupItem b) {
+        if (!canRunBackup()) {
+            return ERROR_NO_WIFI;
+        }
+
         try {
             String rsyncPath = new File(mContext.getFilesDir(), "rsync").getAbsolutePath();
             String sshPath = new File(mContext.getFilesDir(), "ssh").getAbsolutePath();
@@ -256,6 +264,33 @@ public class BackupHandler implements IBackupHandler {
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public boolean canRunBackup() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        boolean wifi_only = prefs.getBoolean(SettingsFragment.KEY_WIFI_ONLY, false);
+
+        if (wifi_only) {
+            ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
+            NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
+
+            if (!mWifi.isConnected()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    public void setRunOnWifi(boolean run) {
+        SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(mContext).edit();
+        editor.putBoolean("RunOnWifi", true);
+        editor.apply();
+    }
+
+    public boolean getRunOnWifi() {
+        SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        return prefs.getBoolean("RunOnWifi", false);
     }
 
     public void syncBackups() {}
