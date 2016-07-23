@@ -1,10 +1,22 @@
-<resources>
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
     <string name="app_name">Syncopoli</string>
     <string name="action_settings">Settings</string>
 
     <string name="backup_title">Backup</string>
     <string name="settings_title">Settings</string>
     <string name="action_run_backup">Run backup</string>
+
+    <string name="addbackupitem_name">Profile name</string>
+    <string name="addbackupitem_origin">Origin</string>
+    <string name="addbackupitem_destination">Destination</string>
+    <string name="addbackupitem_direction_prompt">Backup direction</string>
+    <string-array name="addbackupitem_direction_entries">
+        <item>Remote to local</item>
+        <item>Local to remote</item>
+    </string-array>
 
     <!-- Action bar icons -->
     <string name="action_refresh">Refresh</string>
