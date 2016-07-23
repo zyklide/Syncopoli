@@ -1,0 +1,11 @@
+v0.2
+----
+- Logs are now copyable
+
+v0.1.1
+------
+- Fixed instant crash on Android < Lollipop
+
+v0.1
+----
+- Initial release
