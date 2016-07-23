@@ -1,0 +1,34 @@
+<resources>
+    <string name="app_name">Syncopoli</string>
+    <string name="action_settings">Configuración</string>
+
+    <string name="backup_title">Respaldo</string>
+    <string name="settings_title">Configuración</string>
+    <string name="action_run_backup">Realizar respaldo</string>
+
+    <!-- Action bar icons -->
+    <string name="action_refresh">Actualizar</string>
+    <string name="action_done">Listo</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- General settings -->
+    <string name="pref_header_general">General</string>
+    <string name="pref_title_server_address">Dirección del servidor</string>
+    <string name="pref_title_private_key">Clave privada</string>
+    <string name="pref_title_username">Usuario</string>
+    <string name="pref_title_options">Opciones adicionales</string>
+    <string name="pref_title_protocol">Protocolo</string>
+    <string name="pref_default_protocol">Rsync</string>
+    <string name="pref_title_port">Puerto</string>
+    <string name="pref_title_frequency">Frecuencia (horas)</string>
+    <string name="pref_title_rsync_password">Contraseña de Rsync</string>
+    
+    <string-array name="pref_entries_protocol">
+        <item>SSH</item>
+        <item>Rsync</item>
+    </string-array>
+
+    <string name="pref_category_general">General</string>
+    <string name="pref_category_sync_backup">Sinc &amp; Respaldo</string>
+</resources>
