@@ -7,8 +7,8 @@
     <TextView
         android:id="@+id/backuplog_textview"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-
+        android:layout_height="wrap_content"
+        android:textIsSelectable="true"
         android:useDefaultMargins="true">
     </TextView>
 

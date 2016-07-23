@@ -519,6 +519,7 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             menu.findItem(R.id.action_done).setVisible(false);
             menu.findItem(R.id.action_refresh).setVisible(true);
             menu.findItem(R.id.action_run).setVisible(true);
+
         }
 
         @Override
