@@ -1,0 +1,35 @@
+<resources>
+    <string name="app_name">Syncopoli</string>
+    <string name="action_settings">設定</string>
+
+    <string name="backup_title">バックアップ</string>
+    <string name="settings_title">設定</string>
+    <string name="action_run_backup">バックアップを実行</string>
+
+    <!-- Action bar icons -->
+    <string name="action_refresh">リフレッシュ</string>
+    <string name="action_done">完了</string>
+    <string name="action_run">すべてのバックアップを実行</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- General settings -->
+    <string name="pref_header_general">全般</string>
+    <string name="pref_title_server_address">サーバーアドレス</string>
+    <string name="pref_title_private_key">秘密鍵</string>
+    <string name="pref_title_username">ユーザー</string>
+    <string name="pref_title_options">追加オプション</string>
+    <string name="pref_title_protocol">プロトコル</string>
+    <string name="pref_default_protocol">Rsync</string>
+    <string name="pref_title_port">ポート</string>
+    <string name="pref_title_frequency">周期 (時間)</string>
+    <string name="pref_title_rsync_password">Rsync パスワード</string>
+    
+    <string-array name="pref_entries_protocol">
+        <item>SSH</item>
+        <item>Rsync</item>
+    </string-array>
+
+    <string name="pref_category_general">全般</string>
+    <string name="pref_category_sync_backup">同期 &amp; バックアップ</string>
+</resources>
