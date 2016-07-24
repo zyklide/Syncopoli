@@ -26,3 +26,11 @@ FAQ
 Q: Why is Syncopoli making connections to <someservername>?
 
 A: Syncopoli needs `rsync` and `ssh` (dropbearssh) to operate. Since F-Droid does not allow bundling of binary files, I have hosted them on <someservername> and download those two when you first run the program. If you don't trust the binaries and have your phone rooted, just put `rsync` and `ssh` binaries that you have compiled yourself in `/data/data/org.amoradi.topoli` and Syncopoli will use those ones instead.
+
+Credits
+=======
+
+Translators
+-----------
+* Spanish - [Andrés Hernández](https://gitlab.com/u/auroszx)
+* Japanese - [naofum](https://gitlab.com/u/naofumi)
