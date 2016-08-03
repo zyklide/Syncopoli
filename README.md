@@ -1,6 +1,8 @@
 Syncopoli - Rsync for Android
 =============================
 
+[<img src="https://f-droid.org/badge/get-it-on.png" alt="Get it on F-Droid" height="60">](https://f-droid.org/app/org.amoradi.syncopoli)
+
 Options
 -------
 * Server address - The IP address of your server
