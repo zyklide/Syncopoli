@@ -29,15 +29,22 @@ public class BackupHandler implements IBackupHandler {
     Context mContext;
 
     public static final int ERROR_NO_WIFI = -2;
+    public static final int ERROR_EXISTS = -3;
 
     public BackupHandler(Context ctx) {
         mContext = ctx;
         updateBackupList();
     }
 
-    public void addBackup(BackupItem item) {
+    public int addBackup(BackupItem item) {
         if (item.source.equals("") || item.name.equals("") || item.destination.equals("")) {
-            return;
+            return -1;
+        }
+
+        for (BackupItem x : mBackupItems) {
+            if (x.name.equals(item.name)) {
+                return ERROR_EXISTS;
+            }
         }
 
         BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(mContext);
@@ -61,6 +68,7 @@ public class BackupHandler implements IBackupHandler {
         dbHelper.close();
 
         updateBackupList();
+        return 0;
     }
 
     public List<BackupItem> getBackups() {

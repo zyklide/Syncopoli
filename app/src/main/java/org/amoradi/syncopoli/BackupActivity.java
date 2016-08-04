@@ -135,11 +135,15 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         return true;
     }
 
-    public void addBackup(BackupItem item) {
-        mBackupHandler.addBackup(item);
+    public int addBackup(BackupItem item) {
+        if (mBackupHandler.addBackup(item) == BackupHandler.ERROR_EXISTS) {
+            Toast.makeText(getApplicationContext(), "Profile '" + item.name + "' already exists", Toast.LENGTH_SHORT).show();
+        }
+
         BackupListFragment f = new BackupListFragment();
         f.setBackupHandler(this);
         setCurrentFragment(f, true);
+        return 0;
     }
 
     public void updateBackupList() {
