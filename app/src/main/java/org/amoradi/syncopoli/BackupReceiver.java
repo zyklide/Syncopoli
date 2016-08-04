@@ -23,9 +23,9 @@ public class BackupReceiver extends BroadcastReceiver {
             Bundle settingsBundle = new Bundle();
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_MANUAL, true);
             settingsBundle.putBoolean(ContentResolver.SYNC_EXTRAS_EXPEDITED, true);
-            ContentResolver.requestSync(acc, BackupActivity.SYNC_AUTHORITY, settingsBundle);
 
             h.setRunOnWifi(false);
+            ContentResolver.requestSync(acc, BackupActivity.SYNC_AUTHORITY, settingsBundle);
         }
     }
 }
