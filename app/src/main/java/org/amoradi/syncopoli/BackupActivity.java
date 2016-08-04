@@ -28,6 +28,7 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -323,6 +324,15 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
                 t = (EditText) getView().findViewById(R.id.addbackupitem_name);
                 i.name = t.getText().toString();
+
+                Spinner s = (Spinner) getView().findViewById(R.id.addbackupitem_direction);
+                String dir = s.getSelectedItem().toString();
+
+                if (dir.equals("Remote to local")) {
+                    i.direction = BackupItem.Direction.INCOMING;
+                } else {
+                    i.direction = BackupItem.Direction.OUTGOING;
+                }
 
                 mHandler.addBackup(i);
             } else {

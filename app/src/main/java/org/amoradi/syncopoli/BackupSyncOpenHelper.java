@@ -16,7 +16,8 @@ public class BackupSyncOpenHelper extends SQLiteOpenHelper {
                    BackupSyncSchema.COLUMN_NAME         + " text, " +
                    BackupSyncSchema.COLUMN_SOURCE       + " text, " +
                    BackupSyncSchema.COLUMN_DESTINATION  + " text, " +
-                   BackupSyncSchema.COLUMN_LAST_UPDATE  + " text);");
+                   BackupSyncSchema.COLUMN_LAST_UPDATE  + " text, " +
+                   BackupSyncSchema.COLUMN_DIRECTION    + " text);");
     }
 
     @Override

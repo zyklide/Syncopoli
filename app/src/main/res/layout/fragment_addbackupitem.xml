@@ -6,6 +6,13 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
+    <Spinner
+        android:id="@+id/addbackupitem_direction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/addbackupitem_direction_entries"
+        android:prompt="@string/addbackupitem_direction_prompt"/>
+
     <android.support.design.widget.TextInputLayout
         android:id="@+id/addbackupitem_name_layout"
         android:layout_width="match_parent"
@@ -15,7 +22,7 @@
             android:id="@+id/addbackupitem_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Profile name" />
+            android:hint="@string/addbackupitem_name" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -28,7 +35,7 @@
             android:id="@+id/addbackupitem_source"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Origin" />
+            android:hint="@string/addbackupitem_origin" />
 
     </android.support.design.widget.TextInputLayout>
 
@@ -41,7 +48,7 @@
             android:id="@+id/addbackupitem_destination"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="Destination" />
+            android:hint="@string/addbackupitem_destination" />
 
     </android.support.design.widget.TextInputLayout>
 </LinearLayout>

@@ -50,6 +50,12 @@ public class BackupHandler implements IBackupHandler {
         values.put(BackupSyncSchema.COLUMN_DESTINATION, item.destination);
         values.put(BackupSyncSchema.COLUMN_LAST_UPDATE, "");
 
+        if (item.direction == BackupItem.Direction.INCOMING) {
+            values.put(BackupSyncSchema.COLUMN_DIRECTION, "INCOMING");
+        } else {
+            values.put(BackupSyncSchema.COLUMN_DIRECTION, "OUTGOING");
+        }
+
         db.insert(BackupSyncSchema.TABLE_NAME, null, values);
         db.close();
         dbHelper.close();
@@ -102,6 +108,13 @@ public class BackupHandler implements IBackupHandler {
             x.name = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_NAME));
             x.source = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_SOURCE));
             x.destination = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_DESTINATION));
+
+            String dir = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_DIRECTION));
+            if (dir.equals("INCOMING")) {
+                x.direction = BackupItem.Direction.INCOMING;
+            } else {
+                x.direction = BackupItem.Direction.OUTGOING;
+            }
 
             try {
                 x.lastUpdate = df.parse(c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_LAST_UPDATE)));
@@ -202,11 +215,23 @@ public class BackupHandler implements IBackupHandler {
 
                 args.add("-e");
                 args.add(sshPath + " -y -p " + port + " -i " + private_key);
-                args.add(b.source);
-                args.add(rsync_username + "@" + server_address + ":" + b.destination);
+
+                if (b.direction == BackupItem.Direction.OUTGOING) {
+                    args.add(b.source);
+                    args.add(rsync_username + "@" + server_address + ":" + b.destination);
+                } else {
+                    args.add(rsync_username + "@" + server_address + ":" + b.source);
+                    args.add(b.destination);
+                }
+
             } else if (protocol.equals("Rsync")) {
-                args.add(b.source);
-                args.add(rsync_username + "@" + server_address + "::" + b.destination);
+                if (b.direction == BackupItem.Direction.OUTGOING) {
+                    args.add(b.source);
+                    args.add(rsync_username + "@" + server_address + "::" + b.destination);
+                } else {
+                    args.add(rsync_username + "@" + server_address + "::" + b.source);
+                    args.add(b.destination);
+                }
             }
 
             /*
