@@ -7,6 +7,7 @@ import android.app.Fragment;
 import android.app.FragmentTransaction;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -15,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -420,8 +422,9 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
     public static class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> implements IBackupItemClickHandler {
         IBackupHandler mBackupHandler;
+        private static Context mContext;
 
-        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
             IBackupItemClickHandler mBackupClickHandler;
 
             public TextView mProfileTextView;
@@ -431,7 +434,9 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             public ViewHolder(View v, IBackupItemClickHandler handler) {
                 super(v);
                 LinearLayout l = (LinearLayout) v.findViewById(R.id.backup_item_info);
+
                 l.setOnClickListener(this);
+                l.setOnLongClickListener(this);
 
                 mView = l;
                 mBackupClickHandler = handler;
@@ -445,10 +450,35 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
                     mBackupClickHandler.onBackupShowLog(getAdapterPosition());
                 }
             }
+
+            @Override
+            public boolean onLongClick(View v) {
+                if (v instanceof LinearLayout) {
+                    final CharSequence[] items = {"Edit Profile", "Delete Profile"};
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+
+                    builder.setTitle("Select The Action");
+                    builder.setItems(items, new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int item) {
+                            if (item == 0) {
+                                Toast.makeText(mContext, "Editing profile", Toast.LENGTH_SHORT).show();
+                            } else if (item == 1) {
+                                Toast.makeText(mContext, "Deleting profile", Toast.LENGTH_SHORT).show();
+                            }
+                        }
+                    });
+                    builder.show();
+                    return true;
+                }
+                return false;
+            }
         }
 
-        public BackupAdapter(IBackupHandler handler) {
+        public BackupAdapter(IBackupHandler handler, Context ctx) {
             mBackupHandler = handler;
+            mContext = ctx;
         }
 
         @Override
@@ -509,7 +539,7 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             mRecyclerView.setHasFixedSize(true);
             mRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity().getApplicationContext()));
 
-            mAdapter = new BackupAdapter(mBackupHandler);
+            mAdapter = new BackupAdapter(mBackupHandler, getActivity());
             mRecyclerView.setAdapter(mAdapter);
 
             mRecyclerView.addItemDecoration(new DividerItemDecoration(getActivity(), DividerItemDecoration.VERTICAL_LIST));
@@ -533,7 +563,6 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
             menu.findItem(R.id.action_done).setVisible(false);
             menu.findItem(R.id.action_refresh).setVisible(true);
             menu.findItem(R.id.action_run).setVisible(true);
-
         }
 
         @Override
