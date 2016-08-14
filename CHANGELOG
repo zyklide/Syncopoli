@@ -1,6 +1,12 @@
 v0.2
 ----
 - Logs are now copyable
+- added wifi-only option to only sync when on wifi
+- added ability to edit and delete profiles
+- added remote to local/phone syncing
+- added multiple translations (thanks to each contributor)
+  - Spanish - Andrés Hernández (https://gitlab.com/u/auroszx)
+  - Japanese - naofum (https://gitlab.com/u/naofumi)
 
 v0.1.1
 ------
