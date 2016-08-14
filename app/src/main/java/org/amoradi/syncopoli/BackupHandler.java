@@ -190,6 +190,30 @@ public class BackupHandler implements IBackupHandler {
         dbHelper.close();
     }
 
+    public int updateBackup(BackupItem b) {
+        BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(BackupSyncSchema.COLUMN_TYPE, "backup");
+        values.put(BackupSyncSchema.COLUMN_NAME, b.name);
+        values.put(BackupSyncSchema.COLUMN_SOURCE, b.source);
+        values.put(BackupSyncSchema.COLUMN_DESTINATION, b.destination);
+        values.put(BackupSyncSchema.COLUMN_LAST_UPDATE, "");
+
+        if (b.direction == BackupItem.Direction.INCOMING) {
+            values.put(BackupSyncSchema.COLUMN_DIRECTION, "INCOMING");
+        } else {
+            values.put(BackupSyncSchema.COLUMN_DIRECTION, "OUTGOING");
+        }
+
+        db.update(BackupSyncSchema.TABLE_NAME, values, "name='" + b.name + "'", null);
+        db.close();
+        dbHelper.close();
+
+        return 0;
+    }
+
     public int runBackup(BackupItem b) {
         if (!canRunBackup()) {
             return ERROR_NO_WIFI;
@@ -357,4 +381,5 @@ public class BackupHandler implements IBackupHandler {
 
     public void syncBackups() {}
     public void showLog(BackupItem b) {}
+    public int editBackup(BackupItem b) {return 0;}
 }

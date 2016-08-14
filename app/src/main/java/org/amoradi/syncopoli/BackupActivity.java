@@ -16,6 +16,7 @@ import android.preference.PreferenceManager;
 import android.support.annotation.LayoutRes;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.design.widget.TextInputEditText;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -148,6 +149,16 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         return 0;
     }
 
+    public int updateBackup(BackupItem item) {
+        mBackupHandler.updateBackup(item);
+        mBackupHandler.updateBackupList();
+
+        BackupListFragment f = new BackupListFragment();
+        f.setBackupHandler(this);
+        setCurrentFragment(f, true);
+        return 0;
+    }
+
     public int removeBackup(BackupItem item) {
         int ret = mBackupHandler.removeBackup(item);
         if (ret == 0) {
@@ -155,6 +166,13 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         }
 
         return ret;
+    }
+
+    public int editBackup(BackupItem item) {
+        AddBackupItemFragment f = new AddBackupItemFragment();
+        f.setBackupContent(item);
+        getFragmentManager().beginTransaction().replace(R.id.content_container, f).addToBackStack(null).commit();
+        return 0;
     }
 
     public void updateBackupList() {
@@ -297,11 +315,16 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
     public static class AddBackupItemFragment extends Fragment {
         IBackupHandler mHandler;
+        BackupItem mBackup = null;
 
         @Override
         public void onAttach(Activity acc) {
             super.onAttach(acc);
             mHandler = (IBackupHandler) acc;
+        }
+
+        public void setBackupContent(BackupItem b) {
+            mBackup = b;
         }
 
         @Override
@@ -313,7 +336,29 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            return inflater.inflate(R.layout.fragment_addbackupitem, container, false);
+            View v = inflater.inflate(R.layout.fragment_addbackupitem, container, false);
+
+            if (mBackup == null) {
+                return v;
+            }
+
+            Spinner v_dir = (Spinner) v.findViewById(R.id.addbackupitem_direction);
+            if (mBackup.direction == BackupItem.Direction.OUTGOING) {
+                v_dir.setSelection(1);
+            } else {
+                v_dir.setSelection(0);
+            }
+
+            TextInputEditText v_name = (TextInputEditText) v.findViewById(R.id.addbackupitem_name);
+            v_name.setText(mBackup.name);
+
+            TextInputEditText v_src = (TextInputEditText) v.findViewById(R.id.addbackupitem_source);
+            v_src.setText(mBackup.source);
+
+            TextInputEditText v_dst = (TextInputEditText) v.findViewById(R.id.addbackupitem_destination);
+            v_dst.setText(mBackup.destination);
+
+            return v;
         }
 
         @Override
@@ -349,7 +394,11 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
                     i.direction = BackupItem.Direction.OUTGOING;
                 }
 
-                mHandler.addBackup(i);
+                if (mBackup == null) {
+                    mHandler.addBackup(i);
+                } else {
+                    mHandler.updateBackup(i);
+                }
             } else {
                 return super.onOptionsItemSelected(item);
             }
@@ -533,9 +582,8 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         }
 
         public void onBackupEdit(int pos) {
-
+            mBackupHandler.editBackup(mBackupHandler.getBackups().get(pos));
         }
-
     }
 
     public static class BackupListFragment extends Fragment {
