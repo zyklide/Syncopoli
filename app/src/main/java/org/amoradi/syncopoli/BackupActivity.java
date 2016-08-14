@@ -148,6 +148,15 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         return 0;
     }
 
+    public int removeBackup(BackupItem item) {
+        int ret = mBackupHandler.removeBackup(item);
+        if (ret == 0) {
+            mBackupHandler.updateBackupList();
+        }
+
+        return ret;
+    }
+
     public void updateBackupList() {
         mBackupHandler.updateBackupList();
     }
@@ -463,9 +472,9 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
                         @Override
                         public void onClick(DialogInterface dialog, int item) {
                             if (item == 0) {
-                                Toast.makeText(mContext, "Editing profile", Toast.LENGTH_SHORT).show();
+                                mBackupClickHandler.onBackupEdit(getAdapterPosition());
                             } else if (item == 1) {
-                                Toast.makeText(mContext, "Deleting profile", Toast.LENGTH_SHORT).show();
+                                mBackupClickHandler.onBackupDelete(getAdapterPosition());
                             }
                         }
                     });
@@ -517,6 +526,16 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         public void onBackupShowLog(int pos) {
             mBackupHandler.showLog(mBackupHandler.getBackups().get(pos));
         }
+
+        public void onBackupDelete(int pos) {
+            mBackupHandler.removeBackup(mBackupHandler.getBackups().get(pos));
+            notifyDataSetChanged();
+        }
+
+        public void onBackupEdit(int pos) {
+
+        }
+
     }
 
     public static class BackupListFragment extends Fragment {

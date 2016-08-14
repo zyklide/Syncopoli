@@ -30,6 +30,8 @@ public class BackupHandler implements IBackupHandler {
 
     public static final int ERROR_NO_WIFI = -2;
     public static final int ERROR_EXISTS = -3;
+    public static final int ERROR_MISSING = -4;
+    public static final int ERROR_TOO_MANY_RESULTS = -5;
 
     public BackupHandler(Context ctx) {
         mContext = ctx;
@@ -68,6 +70,33 @@ public class BackupHandler implements IBackupHandler {
         dbHelper.close();
 
         updateBackupList();
+        return 0;
+    }
+
+    public int removeBackup(BackupItem item) {
+        BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(mContext);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+
+        Cursor c = db.query(
+                BackupSyncSchema.TABLE_NAME,
+                null,
+                "name = '" + item.name + "'",
+                null,
+                null,
+                null,
+                BackupSyncSchema.COLUMN_NAME + " DESC",
+                null
+        );
+
+        if (c.getCount() <= 0) {
+            return BackupHandler.ERROR_MISSING;
+        }
+
+        if (c.getCount() > 1) {
+            return BackupHandler.ERROR_TOO_MANY_RESULTS;
+        }
+
+        db.delete(BackupSyncSchema.TABLE_NAME, "name = '" + item.name + "'", null);
         return 0;
     }
 
