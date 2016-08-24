@@ -57,6 +57,7 @@ public class BackupHandler implements IBackupHandler {
         values.put(BackupSyncSchema.COLUMN_NAME, item.name);
         values.put(BackupSyncSchema.COLUMN_SOURCE, item.source);
         values.put(BackupSyncSchema.COLUMN_DESTINATION, item.destination);
+        values.put(BackupSyncSchema.COLUMN_RSYNC_OPTIONS, "");
         values.put(BackupSyncSchema.COLUMN_LAST_UPDATE, "");
 
         if (item.direction == BackupItem.Direction.INCOMING) {
@@ -110,13 +111,6 @@ public class BackupHandler implements IBackupHandler {
         BackupSyncOpenHelper dbHelper = new BackupSyncOpenHelper(mContext);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
 
-        /*
-        String[] proj = {BackupSyncSchema.COLUMN_NAME,
-                BackupSyncSchema.COLUMN_SOURCE,
-                BackupSyncSchema.COLUMN_DESTINATION,
-                BackupSyncSchema.COLUMN_LAST_UPDATE};
-        */
-
         Cursor c = db.query(
                 BackupSyncSchema.TABLE_NAME,
                 null, //proj
@@ -145,6 +139,7 @@ public class BackupHandler implements IBackupHandler {
             x.name = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_NAME));
             x.source = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_SOURCE));
             x.destination = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_DESTINATION));
+            x.rsync_options = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_RSYNC_OPTIONS));
 
             String dir = c.getString(c.getColumnIndex(BackupSyncSchema.COLUMN_DIRECTION));
             if (dir.equals("INCOMING")) {
@@ -179,6 +174,7 @@ public class BackupHandler implements IBackupHandler {
         values.put(BackupSyncSchema.COLUMN_NAME, b.name);
         values.put(BackupSyncSchema.COLUMN_SOURCE, b.source);
         values.put(BackupSyncSchema.COLUMN_DESTINATION, b.destination);
+        values.put(BackupSyncSchema.COLUMN_RSYNC_OPTIONS, b.rsync_options);
 
         b.lastUpdate = new Date();
 
@@ -200,6 +196,7 @@ public class BackupHandler implements IBackupHandler {
         values.put(BackupSyncSchema.COLUMN_SOURCE, b.source);
         values.put(BackupSyncSchema.COLUMN_DESTINATION, b.destination);
         values.put(BackupSyncSchema.COLUMN_LAST_UPDATE, "");
+        values.put(BackupSyncSchema.COLUMN_RSYNC_OPTIONS, b.rsync_options);
 
         if (b.direction == BackupItem.Direction.INCOMING) {
             values.put(BackupSyncSchema.COLUMN_DIRECTION, "INCOMING");
@@ -266,6 +263,10 @@ public class BackupHandler implements IBackupHandler {
 
             if (!rsync_options.equals("")) {
                 Collections.addAll(args, rsync_options.split(" "));
+            }
+
+            if (!b.rsync_options.equals("")) {
+                Collections.addAll(args, b.rsync_options.split(" "));
             }
 
             if (protocol.equals("SSH")) {

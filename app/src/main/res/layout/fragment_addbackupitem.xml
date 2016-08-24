@@ -51,4 +51,17 @@
             android:hint="@string/addbackupitem_destination" />
 
     </android.support.design.widget.TextInputLayout>
+
+    <android.support.design.widget.TextInputLayout
+        android:id="@+id/addbackupitem_rsync_options_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <android.support.design.widget.TextInputEditText
+            android:id="@+id/addbackupitem_rsync_options"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="@string/addbackupitem_rsync_options" />
+
+    </android.support.design.widget.TextInputLayout>
 </LinearLayout>

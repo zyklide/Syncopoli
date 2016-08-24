@@ -12,6 +12,8 @@
     <string name="addbackupitem_name">Profile name</string>
     <string name="addbackupitem_origin">Origin</string>
     <string name="addbackupitem_destination">Destination</string>
+    <string name="addbackupitem_rsync_options">Additional rsync options</string>
+    <string name="addbackupitem_frequency">Frequency (in hours)</string>
     <string name="addbackupitem_direction_prompt">Backup direction</string>
     <string-array name="addbackupitem_direction_entries">
         <item>Remote to local</item>

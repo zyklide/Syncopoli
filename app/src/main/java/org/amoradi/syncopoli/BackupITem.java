@@ -14,4 +14,7 @@ class BackupItem {
     public String logFileName;
     public Date lastUpdate;
     public Direction direction;
+
+    public String rsync_options;
+    public int frequency;
 }
