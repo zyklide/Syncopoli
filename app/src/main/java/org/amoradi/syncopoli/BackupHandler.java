@@ -302,10 +302,13 @@ public class BackupHandler implements IBackupHandler {
 
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.directory(mContext.getFilesDir());
-            //pb.redirectErrorStream(true);
+            pb.redirectErrorStream(true);
+
+            // Set environment (make sure we have reasonable $HOME, so ssh can store keys)
+            Map<String, String> env = pb.environment();
+            env.put("HOME", mContext.getFilesDir().getAbsolutePath());
 
             if (protocol.equals("Rsync") && !rsync_password.equals("")) {
-                Map<String, String> env = pb.environment();
                 env.put("RSYNC_PASSWORD", rsync_password);
             }
 
@@ -323,7 +326,7 @@ public class BackupHandler implements IBackupHandler {
             BufferedReader reader;
             char[] buffer = new char[4096];
 
-            /* STDOUT */
+            /* Read STDOUT & STDERR */
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((read = reader.read(buffer)) > 0) {
                 StringBuffer output = new StringBuffer();
@@ -332,19 +335,15 @@ public class BackupHandler implements IBackupHandler {
             }
             reader.close();
 
-            /* STDERR */
-            StringBuilder stderr = new StringBuilder();
-            reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while(reader.read(buffer) > 0) {
-                stderr.append(buffer);
-            }
-
-            // Waits for the command to finish.
+            // Wait for the command to finish.
             process.waitFor();
 
-            if (process.exitValue() != 0) {
-                logFile.write("Error text:\n".getBytes());
-                logFile.write(stderr.toString().getBytes());
+            // Show message how it ended.
+            int errno = process.exitValue();
+            if (errno != 0) {
+                logFile.write(("\nSync FAILED (error code " + errno + ").\n").getBytes());
+            } else {
+                logFile.write("\nSync complete.\n".getBytes());
             }
 
             return process.exitValue();
