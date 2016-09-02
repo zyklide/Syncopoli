@@ -8,6 +8,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -296,6 +297,12 @@ public class BackupHandler implements IBackupHandler {
                 }
             }
 
+            String cmd = "";
+            for (String a : args) {
+                cmd += "|" + a;
+            }
+            Log.v("BackupHandler", "Command: " + cmd);
+
             /*
              * BUILD PROCESS
              */
@@ -319,7 +326,7 @@ public class BackupHandler implements IBackupHandler {
              * GET STDOUT/STDERR
              */
 
-            int read;
+            int read = 0;
             BufferedReader reader;
             char[] buffer = new char[4096];
 
@@ -328,24 +335,29 @@ public class BackupHandler implements IBackupHandler {
             while ((read = reader.read(buffer)) > 0) {
                 StringBuffer output = new StringBuffer();
                 output.append(buffer, 0, read);
+                Log.v("BackupHandler", output.toString());
                 logFile.write(output.toString().getBytes());
             }
             reader.close();
 
             /* STDERR */
-            StringBuilder stderr = new StringBuilder();
             reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while(reader.read(buffer) > 0) {
-                stderr.append(buffer);
+            while((read = reader.read(buffer)) > 0) {
+                StringBuffer output = new StringBuffer();
+                output.append(buffer, 0, read);
+                Log.e("BackupHandler", output.toString());
+                logFile.write(output.toString().getBytes());
             }
 
             // Waits for the command to finish.
             process.waitFor();
 
             if (process.exitValue() != 0) {
+                logFile.write(("Error code: " + Integer.toString(process.exitValue()) + "\n").getBytes());
                 logFile.write("Error text:\n".getBytes());
-                logFile.write(stderr.toString().getBytes());
             }
+
+            logFile.close();
 
             return process.exitValue();
         } catch (IOException | InterruptedException e) {

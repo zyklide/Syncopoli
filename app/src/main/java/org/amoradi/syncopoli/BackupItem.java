@@ -16,5 +16,4 @@ class BackupItem {
     public Direction direction;
 
     public String rsync_options;
-    public int frequency;
 }
