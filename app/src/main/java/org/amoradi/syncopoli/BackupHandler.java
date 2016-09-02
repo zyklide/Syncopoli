@@ -297,22 +297,19 @@ public class BackupHandler implements IBackupHandler {
                 }
             }
 
-            String cmd = "";
-            for (String a : args) {
-                cmd += "|" + a;
-            }
-            Log.v("BackupHandler", "Command: " + cmd);
-
             /*
              * BUILD PROCESS
              */
 
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.directory(mContext.getFilesDir());
-            //pb.redirectErrorStream(true);
+            pb.redirectErrorStream(true);
+
+            // Set environment (make sure we have reasonable $HOME, so ssh can store keys)
+            Map<String, String> env = pb.environment();
+            env.put("HOME", mContext.getFilesDir().getAbsolutePath());
 
             if (protocol.equals("Rsync") && !rsync_password.equals("")) {
-                Map<String, String> env = pb.environment();
                 env.put("RSYNC_PASSWORD", rsync_password);
             }
 
@@ -330,7 +327,7 @@ public class BackupHandler implements IBackupHandler {
             BufferedReader reader;
             char[] buffer = new char[4096];
 
-            /* STDOUT */
+            /* Read STDOUT & STDERR */
             reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
             while ((read = reader.read(buffer)) > 0) {
                 StringBuffer output = new StringBuffer();
@@ -340,26 +337,20 @@ public class BackupHandler implements IBackupHandler {
             }
             reader.close();
 
-            /* STDERR */
-            reader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
-            while((read = reader.read(buffer)) > 0) {
-                StringBuffer output = new StringBuffer();
-                output.append(buffer, 0, read);
-                Log.e("BackupHandler", output.toString());
-                logFile.write(output.toString().getBytes());
-            }
-
-            // Waits for the command to finish.
+            // Wait for the command to finish.
             process.waitFor();
 
-            if (process.exitValue() != 0) {
-                logFile.write(("Error code: " + Integer.toString(process.exitValue()) + "\n").getBytes());
-                logFile.write("Error text:\n".getBytes());
+            // Show message how it ended.
+            int errno = process.exitValue();
+            if (errno != 0) {
+                logFile.write(("\nSync FAILED (error code " + errno + ").\n").getBytes());
+            } else {
+                logFile.write("\nSync complete.\n".getBytes());
             }
 
             logFile.close();
 
-            return process.exitValue();
+            return errno;
         } catch (IOException | InterruptedException e) {
             throw new RuntimeException(e);
         }
