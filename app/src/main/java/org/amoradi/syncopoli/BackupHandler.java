@@ -323,17 +323,13 @@ public class BackupHandler implements IBackupHandler {
              * GET STDOUT/STDERR
              */
 
-            int read = 0;
-            BufferedReader reader;
-            char[] buffer = new char[4096];
+            String temp = "";
+            BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
             /* Read STDOUT & STDERR */
-            reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-            while ((read = reader.read(buffer)) > 0) {
-                StringBuffer output = new StringBuffer();
-                output.append(buffer, 0, read);
-                Log.v("BackupHandler", output.toString());
-                logFile.write(output.toString().getBytes());
+            while ((temp = reader.readLine()) != null) {
+                Log.v("BackupHandler", temp + "\n");
+                logFile.write((temp + "\n").getBytes());
             }
             reader.close();
 
