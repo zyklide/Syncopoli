@@ -9,6 +9,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.ScrollView;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -56,6 +57,7 @@ public class BackupLogFragment extends Fragment {
 
         if (id == R.id.action_refresh) {
             ((TextView) getView().findViewById(R.id.backuplog_textview)).setText(getLogString(mBackupItem.logFileName));
+            ((ScrollView) getView().findViewById(R.id.backuplog_scrollview)).fullScroll(View.FOCUS_DOWN);
         } else {
             return super.onOptionsItemSelected(item);
         }
