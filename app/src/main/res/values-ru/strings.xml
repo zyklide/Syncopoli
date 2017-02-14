@@ -1,0 +1,53 @@
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <string name="app_name">Syncopoli</string>
+    <string name="action_settings">Настройки</string>
+
+    <string name="backup_title">Бэкап</string>
+    <string name="settings_title">Настройки</string>
+    <string name="action_run_backup">Запуск бэкапа</string>
+
+    <string name="addbackupitem_name">Имя профиля</string>
+    <string name="addbackupitem_origin">Origin</string>
+    <string name="addbackupitem_destination">Назначение</string>
+    <string name="addbackupitem_rsync_options">Доп. опции rsync</string>
+    <string name="addbackupitem_frequency">Частота (в час)</string>
+    <string name="addbackupitem_direction_prompt">Направление бэкапа</string>
+    <string-array name="addbackupitem_direction_entries">
+        <item>Удаленный в локальный</item>
+        <item>Локальный в удаленный</item>
+    </string-array>
+
+    <!-- Action bar icons -->
+    <string name="action_refresh">Обновить</string>
+    <string name="action_done">Готово</string>
+    <string name="action_run">Запуск всех бэкапов</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- General settings -->
+    <string name="pref_header_general">Общие</string>
+    <string name="pref_title_server_address">Адрес сервера</string>
+    <string name="pref_title_private_key">Файл приватного ключа</string>
+    <string name="pref_title_username">Пользователь</string>
+    <string name="pref_title_options">Доп. опции</string>
+    <string name="pref_title_protocol">Протокол</string>
+    <string name="pref_default_protocol">Rsync</string>
+    <string name="pref_title_port">Порт</string>
+    <string name="pref_title_frequency">Частота (час)</string>
+    <string name="pref_title_rsync_password">Пароль Rsync</string>
+    <string name="pref_title_wifi_only">Только Wifi</string>
+    
+    <string-array name="pref_entries_protocol">
+        <item>SSH</item>
+        <item>Rsync</item>
+    </string-array>
+
+    <string name="pref_category_general">Общие</string>
+    <string name="pref_category_sync_backup">Sync &amp; Backup</string>
+
+    <string name="pref_sum_wifi_only">Для синхронизации нужно Wifi соединение</string>
+    <string name="pref_sum_no_wifi_only">Для синхронизации нужно любое сетевое соединение (включая мобильное)</string>
+</resources>
