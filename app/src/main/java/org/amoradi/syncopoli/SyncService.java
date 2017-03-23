@@ -4,6 +4,8 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
+import org.amoradi.syncopoli.adapters.SyncAdapter;
+
 public class SyncService extends Service {
     // Storage for an instance of the sync adapter
     private static SyncAdapter sSyncAdapter = null;
@@ -25,6 +27,7 @@ public class SyncService extends Service {
             }
         }
     }
+
     /**
      * Return an object that allows the system to invoke
      * the sync adapter.

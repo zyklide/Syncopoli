@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.adapters;
 
 import android.content.Context;
 import android.content.DialogInterface;
@@ -10,6 +10,10 @@ import android.view.ViewGroup;
 import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
+import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.IBackupItemClickHandler;
+import org.amoradi.syncopoli.R;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> implements IBackupItemClickHandler {
     IBackupHandler mBackupHandler;
@@ -74,7 +78,7 @@ public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder
 
     @Override
     public BackupAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.backup_item, parent, false);
+        View v = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_backup, parent, false);
         ViewHolder vh = new ViewHolder(v.findViewById(R.id.backup_item), this);
         return vh;
     }

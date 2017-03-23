@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.adapters;
 
 import android.accounts.Account;
 import android.content.AbstractThreadedSyncAdapter;
@@ -6,6 +6,9 @@ import android.content.ContentProviderClient;
 import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
+
+import org.amoradi.syncopoli.BackupHandler;
+import org.amoradi.syncopoli.BackupItem;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public SyncAdapter(Context ctx, boolean autoInit) {

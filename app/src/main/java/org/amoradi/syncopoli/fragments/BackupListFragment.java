@@ -12,7 +12,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import org.amoradi.syncopoli.BackupAdapter;
+import org.amoradi.syncopoli.adapters.BackupAdapter;
 import org.amoradi.syncopoli.BackupItem;
 import org.amoradi.syncopoli.DividerItemDecoration;
 import org.amoradi.syncopoli.IBackupHandler;

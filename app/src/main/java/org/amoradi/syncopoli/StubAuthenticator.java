@@ -21,30 +21,31 @@ public class StubAuthenticator extends AbstractAccountAuthenticator {
     public StubAuthenticator(Context context) {
         super(context);
     }
+
     // Editing properties is not supported
     @Override
-    public Bundle editProperties(
-            AccountAuthenticatorResponse r, String s) {
+    public Bundle editProperties(AccountAuthenticatorResponse r, String s) {
         throw new UnsupportedOperationException();
     }
+
     // Don't add additional accounts
     @Override
-    public Bundle addAccount(
-            AccountAuthenticatorResponse r,
+    public Bundle addAccount(AccountAuthenticatorResponse r,
             String s,
             String s2,
             String[] strings,
             Bundle bundle) throws NetworkErrorException {
         return null;
     }
+
     // Ignore attempts to confirm credentials
     @Override
-    public Bundle confirmCredentials(
-            AccountAuthenticatorResponse r,
+    public Bundle confirmCredentials(AccountAuthenticatorResponse r,
             Account account,
             Bundle bundle) throws NetworkErrorException {
         return null;
     }
+
     // Getting an authentication token is not supported
     @Override
     public Bundle getAuthToken(
@@ -54,11 +55,13 @@ public class StubAuthenticator extends AbstractAccountAuthenticator {
             Bundle bundle) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
+
     // Getting a label for the auth token is not supported
     @Override
     public String getAuthTokenLabel(String s) {
         throw new UnsupportedOperationException();
     }
+
     // Updating user credentials is not supported
     @Override
     public Bundle updateCredentials(
@@ -67,6 +70,7 @@ public class StubAuthenticator extends AbstractAccountAuthenticator {
             String s, Bundle bundle) throws NetworkErrorException {
         throw new UnsupportedOperationException();
     }
+
     // Checking features for the account is not supported
     @Override
     public Bundle hasFeatures(

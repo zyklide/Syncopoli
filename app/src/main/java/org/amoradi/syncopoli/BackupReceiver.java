@@ -1,6 +1,5 @@
 package org.amoradi.syncopoli;
 
-
 import android.accounts.Account;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
