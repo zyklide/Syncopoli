@@ -217,12 +217,20 @@ public class BackupHandler implements IBackupHandler {
             return ERROR_NO_WIFI;
         }
 
+        FileOutputStream logFile;
+        try {
+          logFile = mContext.openFileOutput(b.logFileName, Context.MODE_PRIVATE);
+        } catch (IOException e) {
+          throw new RuntimeException(e);
+        }
+
         try {
             String rsyncPath = new File(mContext.getFilesDir(), "rsync").getAbsolutePath();
             String sshPath = new File(mContext.getFilesDir(), "ssh").getAbsolutePath();
+            logFile.write(("Rsync path: " + rsyncPath + "\n").getBytes());
+            logFile.write(("SSH path: " + sshPath + "\n").getBytes());
 
             File f = new File(rsyncPath);
-            FileOutputStream logFile = mContext.openFileOutput(b.logFileName, Context.MODE_PRIVATE);
 
             updateBackupTimestamp(b);
             logFile.write((b.lastUpdate.toString() + " \n\n").getBytes());
@@ -301,6 +309,7 @@ public class BackupHandler implements IBackupHandler {
              * BUILD PROCESS
              */
 
+            logFile.write("building process\n".getBytes());
             ProcessBuilder pb = new ProcessBuilder(args);
             pb.directory(mContext.getFilesDir());
             pb.redirectErrorStream(true);
