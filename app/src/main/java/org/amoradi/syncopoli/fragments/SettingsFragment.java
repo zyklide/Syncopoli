@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.fragments;
 
 
 import android.content.SharedPreferences;
@@ -7,6 +7,8 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.view.Menu;
 import android.view.MenuInflater;
+
+import org.amoradi.syncopoli.R;
 
 public class SettingsFragment extends PreferenceFragment implements SharedPreferences.OnSharedPreferenceChangeListener {
     public final static String KEY_SERVER_ADDRESS = "pref_key_server_address";

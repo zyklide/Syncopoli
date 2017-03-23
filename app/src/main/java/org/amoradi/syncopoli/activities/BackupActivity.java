@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.activities;
 
 import android.accounts.Account;
 import android.accounts.AccountManager;
@@ -18,6 +18,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
+
+import org.amoradi.syncopoli.BackupHandler;
+import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.R;
+import org.amoradi.syncopoli.fragments.SettingsFragment;
+import org.amoradi.syncopoli.TLSSocketFactory;
+import org.amoradi.syncopoli.fragments.AddBackupItemFragment;
+import org.amoradi.syncopoli.fragments.BackupListFragment;
+import org.amoradi.syncopoli.fragments.BackupLogFragment;
 
 import java.io.File;
 import java.io.IOException;

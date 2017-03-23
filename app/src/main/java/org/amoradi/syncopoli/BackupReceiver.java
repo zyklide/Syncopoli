@@ -8,6 +8,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.amoradi.syncopoli.activities.BackupActivity;
+
 public class BackupReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context ctx, Intent intent) {

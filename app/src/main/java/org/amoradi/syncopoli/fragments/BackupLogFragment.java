@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ScrollView;
+
+import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.R;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;

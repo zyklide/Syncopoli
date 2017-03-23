@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.fragments;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -11,6 +11,12 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+
+import org.amoradi.syncopoli.BackupAdapter;
+import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.DividerItemDecoration;
+import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.R;
 
 import java.util.List;
 

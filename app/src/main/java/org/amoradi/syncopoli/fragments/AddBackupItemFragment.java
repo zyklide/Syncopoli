@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.fragments;
 
 import android.app.Activity;
 import android.app.Fragment;
@@ -12,6 +12,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
+
+import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.R;
 
 public class AddBackupItemFragment extends Fragment {
     IBackupHandler mHandler;

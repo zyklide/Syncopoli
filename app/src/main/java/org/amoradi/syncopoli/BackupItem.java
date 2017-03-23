@@ -2,7 +2,7 @@ package org.amoradi.syncopoli;
 
 import java.util.Date;
 
-class BackupItem {
+public class BackupItem {
     public enum Direction {
         INCOMING,
         OUTGOING

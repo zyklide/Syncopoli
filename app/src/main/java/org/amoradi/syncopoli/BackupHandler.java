@@ -10,6 +10,8 @@ import android.net.NetworkInfo;
 import android.preference.PreferenceManager;
 import android.util.Log;
 
+import org.amoradi.syncopoli.fragments.SettingsFragment;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
