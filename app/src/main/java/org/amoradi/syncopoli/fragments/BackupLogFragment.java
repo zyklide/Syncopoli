@@ -11,7 +11,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.ScrollView;
 
-import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.models.BackupItem;
 import org.amoradi.syncopoli.R;
 
 import java.io.BufferedReader;

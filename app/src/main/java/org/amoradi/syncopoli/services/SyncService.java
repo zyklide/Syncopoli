@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.services;
 
 import android.app.Service;
 import android.content.Intent;

@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.utils;
 
 import android.accounts.AbstractAccountAuthenticator;
 import android.accounts.Account;

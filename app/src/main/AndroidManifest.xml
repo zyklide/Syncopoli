@@ -26,7 +26,7 @@
         </activity>
 
         <service
-            android:name="org.amoradi.syncopoli.StubAuthenticatorService">
+            android:name="org.amoradi.syncopoli.services.StubAuthenticatorService">
             <intent-filter>
                 <action android:name="android.accounts.AccountAuthenticator"/>
             </intent-filter>
@@ -36,22 +36,22 @@
         </service>
 
         <service
-            android:name="org.amoradi.syncopoli.SyncService"
+            android:name="org.amoradi.syncopoli.services.SyncService"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.content.SyncAdapter"/>
             </intent-filter>
             <meta-data android:name="android.content.SyncAdapter"
-                android:resource="@xml/syncadapter" />
+                android:resource="@xml/adapter_sync" />
         </service>
 
         <provider
-            android:name="org.amoradi.syncopoli.StubContentProvider"
+            android:name="org.amoradi.syncopoli.utils.StubContentProvider"
             android:authorities="org.amoradi.syncopoli.provider"
             android:exported="false"
             android:syncable="true"/>
 
-        <receiver android:name=".BackupReceiver">
+        <receiver android:name=".services.BackupReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>

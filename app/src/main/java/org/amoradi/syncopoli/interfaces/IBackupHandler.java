@@ -1,4 +1,6 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.interfaces;
+
+import org.amoradi.syncopoli.models.BackupItem;
 
 import java.util.List;
 

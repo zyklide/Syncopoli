@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.utils;
 
 import java.io.IOException;
 import java.net.InetAddress;

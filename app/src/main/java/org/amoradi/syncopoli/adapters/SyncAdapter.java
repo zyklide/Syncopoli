@@ -7,8 +7,8 @@ import android.content.Context;
 import android.content.SyncResult;
 import android.os.Bundle;
 
-import org.amoradi.syncopoli.BackupHandler;
-import org.amoradi.syncopoli.BackupItem;
+import org.amoradi.syncopoli.utils.BackupHandler;
+import org.amoradi.syncopoli.models.BackupItem;
 
 public class SyncAdapter extends AbstractThreadedSyncAdapter {
     public SyncAdapter(Context ctx, boolean autoInit) {

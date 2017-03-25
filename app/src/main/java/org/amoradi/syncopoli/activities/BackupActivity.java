@@ -19,12 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
-import org.amoradi.syncopoli.BackupHandler;
-import org.amoradi.syncopoli.BackupItem;
-import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.utils.BackupHandler;
+import org.amoradi.syncopoli.models.BackupItem;
+import org.amoradi.syncopoli.interfaces.IBackupHandler;
 import org.amoradi.syncopoli.R;
 import org.amoradi.syncopoli.fragments.SettingsFragment;
-import org.amoradi.syncopoli.TLSSocketFactory;
+import org.amoradi.syncopoli.utils.TLSSocketFactory;
 import org.amoradi.syncopoli.fragments.AddBackupItemFragment;
 import org.amoradi.syncopoli.fragments.BackupListFragment;
 import org.amoradi.syncopoli.fragments.BackupLogFragment;

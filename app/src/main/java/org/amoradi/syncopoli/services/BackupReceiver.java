@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.services;
 
 import android.accounts.Account;
 import android.content.BroadcastReceiver;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
+import org.amoradi.syncopoli.utils.BackupHandler;
 import org.amoradi.syncopoli.activities.BackupActivity;
 
 public class BackupReceiver extends BroadcastReceiver {

@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.interfaces;
 
 public interface IBackupItemClickHandler {
     void onBackupShowLog(int pos);

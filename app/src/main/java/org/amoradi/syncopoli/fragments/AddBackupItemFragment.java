@@ -13,8 +13,8 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.Spinner;
 
-import org.amoradi.syncopoli.BackupItem;
-import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.models.BackupItem;
+import org.amoradi.syncopoli.interfaces.IBackupHandler;
 import org.amoradi.syncopoli.R;
 
 public class AddBackupItemFragment extends Fragment {

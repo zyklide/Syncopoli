@@ -11,8 +11,8 @@ import android.view.animation.AccelerateDecelerateInterpolator;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import org.amoradi.syncopoli.IBackupHandler;
-import org.amoradi.syncopoli.IBackupItemClickHandler;
+import org.amoradi.syncopoli.interfaces.IBackupHandler;
+import org.amoradi.syncopoli.interfaces.IBackupItemClickHandler;
 import org.amoradi.syncopoli.R;
 
 public class BackupAdapter extends RecyclerView.Adapter<BackupAdapter.ViewHolder> implements IBackupItemClickHandler {

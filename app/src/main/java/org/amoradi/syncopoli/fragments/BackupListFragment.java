@@ -13,9 +13,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import org.amoradi.syncopoli.adapters.BackupAdapter;
-import org.amoradi.syncopoli.BackupItem;
-import org.amoradi.syncopoli.DividerItemDecoration;
-import org.amoradi.syncopoli.IBackupHandler;
+import org.amoradi.syncopoli.models.BackupItem;
+import org.amoradi.syncopoli.utils.DividerItemDecoration;
+import org.amoradi.syncopoli.interfaces.IBackupHandler;
 import org.amoradi.syncopoli.R;
 
 import java.util.List;

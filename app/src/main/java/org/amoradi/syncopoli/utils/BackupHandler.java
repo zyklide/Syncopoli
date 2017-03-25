@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.utils;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 import org.amoradi.syncopoli.fragments.SettingsFragment;
+import org.amoradi.syncopoli.interfaces.IBackupHandler;
+import org.amoradi.syncopoli.models.BackupItem;
 
 import java.io.BufferedReader;
 import java.io.File;

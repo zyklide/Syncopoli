@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.utils;
 
 import android.content.Context;
 import android.content.res.TypedArray;

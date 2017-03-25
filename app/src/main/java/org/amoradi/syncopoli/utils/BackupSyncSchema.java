@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.utils;
 
 public class BackupSyncSchema {
     public static final String DATABASE_NAME = "syncopoli";

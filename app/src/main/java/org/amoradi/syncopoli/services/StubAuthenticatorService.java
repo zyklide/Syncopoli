@@ -1,8 +1,10 @@
-package org.amoradi.syncopoli;
+package org.amoradi.syncopoli.services;
 
 import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
+
+import org.amoradi.syncopoli.utils.StubAuthenticator;
 
 /**
  * A bound Service that instantiates the authenticator
