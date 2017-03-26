@@ -1,4 +1,4 @@
-package org.amoradi.syncopoli.services;
+package org.amoradi.syncopoli.utils;
 
 import android.accounts.Account;
 import android.content.BroadcastReceiver;

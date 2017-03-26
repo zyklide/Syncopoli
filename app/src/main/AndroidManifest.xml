@@ -51,7 +51,7 @@
             android:exported="false"
             android:syncable="true"/>
 
-        <receiver android:name=".services.BackupReceiver">
+        <receiver android:name=".utils.BackupReceiver">
             <intent-filter>
                 <action android:name="android.net.wifi.WIFI_STATE_CHANGED"/>
                 <action android:name="android.net.wifi.STATE_CHANGE"/>
