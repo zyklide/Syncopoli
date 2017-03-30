@@ -58,7 +58,9 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         long freq = Long.parseLong(prefs.getString(SettingsFragment.KEY_FREQUENCY, "8"));
-        freq = freq * 3600; // hours to seconds
+
+        // hours to seconds
+        freq = freq * 3600;
 
         ContentResolver.addPeriodicSync(mAccount, SYNC_AUTHORITY, new Bundle(), freq);
 
@@ -75,30 +77,29 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
     public void setContentView(@LayoutRes int layoutResId) {
         super.setContentView(layoutResId);
 
-        Toolbar t = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(t);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
     }
 
     public static Account createSyncAccount(Context ctx) {
-        Account acc = new Account(SYNC_ACCOUNT_NAME, SYNC_ACCOUNT_TYPE);
-        AccountManager accman = AccountManager.get(ctx);
+        Account account = new Account(SYNC_ACCOUNT_NAME, SYNC_ACCOUNT_TYPE);
+        AccountManager accountManager = AccountManager.get(ctx);
 
-        if (accman.addAccountExplicitly(acc, null, null)) {
-            ContentResolver.setIsSyncable(acc, SYNC_AUTHORITY, 1);
-            ContentResolver.setSyncAutomatically(acc, SYNC_AUTHORITY, true);
+        if (accountManager.addAccountExplicitly(account, null, null)) {
+            ContentResolver.setIsSyncable(account, SYNC_AUTHORITY, 1);
+            ContentResolver.setSyncAutomatically(account, SYNC_AUTHORITY, true);
         }
 
-        return acc;
+        return account;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
+        // add items to the action bar if present
         getMenuInflater().inflate(R.menu.backup, menu);
         menu.findItem(R.id.action_done).setVisible(false);
         menu.findItem(R.id.action_refresh).setVisible(true);
         menu.findItem(R.id.action_run).setVisible(true);
-
         return true;
     }
 
