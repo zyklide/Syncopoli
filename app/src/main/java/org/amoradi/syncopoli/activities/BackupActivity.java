@@ -19,12 +19,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import org.amoradi.syncopoli.async.DownloadBinaryTask;
 import org.amoradi.syncopoli.utils.BackupHandler;
 import org.amoradi.syncopoli.models.BackupItem;
 import org.amoradi.syncopoli.interfaces.IBackupHandler;
 import org.amoradi.syncopoli.R;
 import org.amoradi.syncopoli.fragments.SettingsFragment;
-import org.amoradi.syncopoli.utils.TLSSocketFactory;
 import org.amoradi.syncopoli.fragments.AddBackupItemFragment;
 import org.amoradi.syncopoli.fragments.BackupListFragment;
 import org.amoradi.syncopoli.fragments.BackupLogFragment;
@@ -76,7 +76,6 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
     @Override
     public void setContentView(@LayoutRes int layoutResId) {
         super.setContentView(layoutResId);
-
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
     }
@@ -84,12 +83,10 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
     public static Account createSyncAccount(Context ctx) {
         Account account = new Account(SYNC_ACCOUNT_NAME, SYNC_ACCOUNT_TYPE);
         AccountManager accountManager = AccountManager.get(ctx);
-
         if (accountManager.addAccountExplicitly(account, null, null)) {
             ContentResolver.setIsSyncable(account, SYNC_AUTHORITY, 1);
             ContentResolver.setSyncAutomatically(account, SYNC_AUTHORITY, true);
         }
-
         return account;
     }
 
@@ -117,7 +114,6 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         // automatically handle clicks on the Home/Up button, so long
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
-
         if (id == R.id.action_run) {
             syncBackups();
         } else if (id == R.id.menu_settings) {
@@ -125,7 +121,6 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
         } else {
             return super.onOptionsItemSelected(item);
         }
-
         return true;
     }
 
@@ -191,13 +186,11 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
 
     private void setCurrentFragment(Fragment f, boolean stack) {
-        FragmentTransaction tr = getFragmentManager().beginTransaction().replace(R.id.content_container, f);
-
+        FragmentTransaction transaction = getFragmentManager().beginTransaction().replace(R.id.content_container, f);
         if (stack) {
-            tr.addToBackStack(null);
+            transaction.addToBackStack(null);
         }
-
-        tr.commit();
+        transaction.commit();
     }
 
     public void copyExecutables() {
@@ -207,100 +200,9 @@ public class BackupActivity extends AppCompatActivity implements IBackupHandler 
 
     public void copyExecutable(String filename) {
         File file = getFileStreamPath(filename);
-
         if (file.exists()) {
             return;
         }
-
         new DownloadBinaryTask(this).execute(filename);
-    }
-
-    private class DownloadBinaryTask extends AsyncTask<String, Void, String> {
-
-        private Context context;
-        private PowerManager.WakeLock mWakeLock;
-        private String filePath;
-
-        public DownloadBinaryTask(Context context) {
-            this.context = context;
-        }
-
-        @Override
-        protected String doInBackground(String... filenames) {
-            InputStream input = null;
-            OutputStream output = null;
-            HttpsURLConnection connection = null;
-
-            try {
-                URL url = new URL("https://amoradi.org/public/android/arm/" + filenames[0]);
-                filePath = context.getFileStreamPath(filenames[0]).getAbsolutePath();
-                connection = (HttpsURLConnection) url.openConnection();
-                connection.setSSLSocketFactory(new TLSSocketFactory());
-                connection.connect();
-
-                // expect HTTP 200 OK, so we don't mistakenly save error report
-                // instead of the file
-                if (connection.getResponseCode() != HttpURLConnection.HTTP_OK) {
-                    return "Server returned HTTP " + connection.getResponseCode()
-                            + " " + connection.getResponseMessage();
-                }
-
-                // download the file
-                input = connection.getInputStream();
-                output = context.openFileOutput(filenames[0], Context.MODE_PRIVATE);
-
-                byte data[] = new byte[4096];
-                int count;
-                while ((count = input.read(data)) != -1) {
-                    // allow canceling with back button
-                    if (isCancelled()) {
-                        input.close();
-                        File f = new File(filePath);
-                        f.delete();
-                        return null;
-                    }
-                    output.write(data, 0, count);
-                }
-            } catch (Exception e) {
-                return e.toString();
-            } finally {
-                try {
-                    if (output != null)
-                        output.close();
-                    if (input != null)
-                        input.close();
-                } catch (IOException ignored) {
-                }
-
-                if (connection != null)
-                    connection.disconnect();
-            }
-            return null;
-        }
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            // take CPU lock to prevent CPU from going off if the user
-            // presses the power button during download
-            PowerManager pm = (PowerManager) context.getSystemService(Context.POWER_SERVICE);
-            mWakeLock = pm.newWakeLock(PowerManager.PARTIAL_WAKE_LOCK,
-                    getClass().getName());
-            mWakeLock.acquire();
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            mWakeLock.release();
-
-            if (result != null) {
-                Toast.makeText(context, "Download Error: " + result, Toast.LENGTH_LONG).show();
-                File f = new File(filePath);
-                f.delete();
-            } else {
-                File f = new File(filePath);
-                f.setExecutable(true);
-            }
-        }
     }
 }
