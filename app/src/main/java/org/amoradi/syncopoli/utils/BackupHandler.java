@@ -298,7 +298,6 @@ public class BackupHandler implements IBackupHandler {
                     args.add(rsync_username + "@" + server_address + ":" + b.source);
                     args.add(b.destination);
                 }
-
             } else if (protocol.equals("Rsync")) {
                 if (b.direction == BackupItem.Direction.OUTGOING) {
                     args.add(b.source);
@@ -367,17 +366,14 @@ public class BackupHandler implements IBackupHandler {
 
     public boolean canRunBackup() {
         SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mContext);
-        boolean wifi_only = prefs.getBoolean(SettingsFragment.KEY_WIFI_ONLY, false);
-
-        if (wifi_only) {
+        boolean wifi = prefs.getBoolean(SettingsFragment.KEY_WIFI_ONLY, false);
+        if (wifi) {
             ConnectivityManager connManager = (ConnectivityManager) mContext.getSystemService(Context.CONNECTIVITY_SERVICE);
             NetworkInfo mWifi = connManager.getNetworkInfo(ConnectivityManager.TYPE_WIFI);
-
             if (!mWifi.isConnected()) {
                 return false;
             }
         }
-
         return true;
     }
 

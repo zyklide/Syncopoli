@@ -26,7 +26,6 @@ public class SettingsFragment extends PreferenceFragment implements SharedPrefer
         if (key.equals(KEY_WIFI_ONLY) || key.equals(KEY_RSYNC_PASSWORD)) {
             return;
         }
-
         Preference pref = findPreference(key);
         String summary = sharedPreferences.getString(key, "Not set");
         pref.setSummary(summary);

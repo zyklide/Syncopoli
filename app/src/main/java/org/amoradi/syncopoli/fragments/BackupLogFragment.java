@@ -34,15 +34,13 @@ public class BackupLogFragment extends Fragment {
     }
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View v = inflater.inflate(R.layout.fragment_backuplog, container, false);
         if (mBackupItem != null) {
             ((TextView) v.findViewById(R.id.backuplog_textview)).setText(getLogString(mBackupItem.logFileName));
         } else {
             ((TextView) v.findViewById(R.id.backuplog_textview)).setText("mBackupItem is null");
         }
-
         return v;
     }
 
