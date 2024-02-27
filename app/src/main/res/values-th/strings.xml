@@ -1,0 +1,53 @@
+<resources
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="MissingTranslation">
+
+    <string name="app_name">Syncopoli</string>
+    <string name="action_settings">ตั้งค่า</string>
+
+    <string name="backup_title">การสำรองข้อมูล</string>
+    <string name="settings_title">การตั้งค่า</string>
+    <string name="action_run_backup">ทำการสำรองข้อมูล</string>
+
+    <string name="addbackupitem_name">ชื่อโปรไฟล์</string>
+    <string name="addbackupitem_origin">ต้นทาง</string>
+    <string name="addbackupitem_destination">ปลายทาง</string>
+    <string name="addbackupitem_rsync_options">ตัวเลือกเพิ่มเติมของ rsync</string>
+    <string name="addbackupitem_frequency">ความถี่ (นับเป็นชั่วโมง)</string>
+    <string name="addbackupitem_direction_prompt">ทิศทางการสำรอง</string>
+    <string-array name="addbackupitem_direction_entries">
+        <item>จากออนไลน์ไปอุปกรณ์</item>
+        <item>จากอุปกรณ์ไปออนไลน์</item>
+    </string-array>
+
+    <!-- Action bar icons -->
+    <string name="action_refresh">รีเฟรช</string>
+    <string name="action_done">สำเร็จ</string>
+    <string name="action_run">ทำการสำรองข้อมูลทั้งหมด</string>
+
+    <!-- Strings related to Settings -->
+
+    <!-- General settings -->
+    <string name="pref_header_general">ทั่วไป</string>
+    <string name="pref_title_server_address">ที่อยู่เซิฟเวอร์</string>
+    <string name="pref_title_private_key">ไฟล์คีย์ส่วนตัว</string>
+    <string name="pref_title_username">ผู้ใช้</string>
+    <string name="pref_title_options">ตัวเลือกเพิ่มเติม</string>
+    <string name="pref_title_protocol">มาตรการ</string>
+    <string name="pref_default_protocol">Rsync</string>
+    <string name="pref_title_port">พอร์ต</string>
+    <string name="pref_title_frequency">ความถี่ (ชั่วโมง)</string>
+    <string name="pref_title_rsync_password">รหัสผ่าน rsync</string>
+    <string name="pref_title_wifi_only">ใช้ไวไฟเท่านั้น</string>
+    
+    <string-array name="pref_entries_protocol">
+        <item>SSH</item>
+        <item>Rsync</item>
+    </string-array>
+
+    <string name="pref_category_general">ทั่วไป</string>
+    <string name="pref_category_sync_backup">ซิงโครไนซ์และทำการสำรองข้อมูล</string>
+
+    <string name="pref_sum_wifi_only">การซิงโครไนซ์ต้องการเชื่อมต่อไวไฟ</string>
+    <string name="pref_sum_no_wifi_only">การซิงโครไนซ์จะใช้การเชื่อมต่อทั้งหมดรวมถึงดาตา</string>
+</resources>
